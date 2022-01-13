@@ -23,10 +23,9 @@ body {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  padding: 8px;
   position: absolute;
   width: 40px;
-  height: 40px;
+  height: 30px;
   right: 24px;
   top: calc(50% - 40px / 2);
   border-radius: 8px;
@@ -75,7 +74,6 @@ body {
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 10px 12px;
   position: absolute;
   width: 101px;
   height: 44px;
@@ -83,12 +81,13 @@ body {
   top: calc(50% - 44px / 2);
 }
 
-.logo {
+.logo-placeholder p {
   position: static;
   width: 77px;
   height: 24px;
   left: 12px;
   top: 10px;
+  text-decoration: none;
   font-family: Roboto, arial, sans-serif;
   font-style: normal;
   font-weight: bold;
@@ -104,11 +103,15 @@ body {
   margin: 0 0;
 }
 
+a.logo-placeholder {
+  text-decoration: none;
+}
+
 .headline {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 120px 24px;
+  padding: 70px 24px;
   position: absolute;
   width: 375px;
   height: 590px;
@@ -123,10 +126,11 @@ body {
   height: 124px;
   left: 24px;
   top: 120px;
+  padding-bottom: 30px;
   font-family: Crete Round, arial, sans-serif;
   font-style: normal;
   font-weight: normal;
-  font-size: 56px;
+  font-size: 36px;
   line-height: 64px;
   letter-spacing: 0.37px;
   color: #ff6b00;
@@ -145,7 +149,7 @@ body {
   font-family: Roboto, arial, sans-serif;
   font-style: normal;
   font-weight: bold;
-  font-size: 24px;
+  font-size: 20px;
   line-height: 32px;
   display: flex;
   align-items: center;
@@ -153,7 +157,6 @@ body {
   flex: none;
   order: 1;
   flex-grow: 0;
-  margin: 12px 0;
 }
 
 .description {
@@ -203,4 +206,12 @@ body {
 .social-icons ul li {
   padding: 10px;
   text-align: center;
+}
+
+#linkedn {
+  padding-left: 0;
+}
+
+#link {
+  padding-right: 0;
 }
