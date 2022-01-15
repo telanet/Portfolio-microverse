@@ -2,7 +2,7 @@
 
 # Project Name
 
--Mobile Portfolio project
+-Middle section of Mobile Portfolio
 
 ![screenshot](./app_screenshot.png)
 
@@ -13,9 +13,10 @@ Additional description about the project and its features.
 - HTML
 - CSS
 
-To get a local copy up and running follow these simple example steps.
+## To get a local copy up and running follow these simple example steps.
 
 ### Prerequisites
+-Git
 -VS Code
 -Linters
 
@@ -28,7 +29,7 @@ To get a local copy up and running follow these simple example steps.
 
 ## 🤝 Contributing
 
-Contributions, issues, and feature requests are welcome!
+This project welcomes contributions.
 
 Feel free to check the [issues page](../../issues/).
 
