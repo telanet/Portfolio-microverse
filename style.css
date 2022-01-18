@@ -229,13 +229,14 @@ img {
 }
 
 .langs {
-  display: flex;
-  justify-content: flex-start;
+  /* display: flex;
+  justify-content: flex-start; */
   margin-left: 0;
   margin-block-start: 0;
   margin-block-end: 0;
   padding-inline-start: 0;
-  flex-wrap: wrap;
+  /* flex-wrap: wrap; */
+  float: left;
 }
 
 .recent-works h5 {
