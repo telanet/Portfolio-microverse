@@ -1,10 +1,8 @@
-![](https://img.shields.io/badge/Microverse-blueviolet)
-
 # Project Name
 
--Middle section of Mobile Portfolio
+-Contact section of Mobile Portfolio
 
-![screenshot](./app_screenshot.png)
+![images](./app_screenshot.png)
 
 Additional description about the project and its features.
 
@@ -13,7 +11,6 @@ Additional description about the project and its features.
 - HTML
 - CSS
 
-## To get a local copy up and running follow these simple example steps.
 
 ### Prerequisites
 -Git
@@ -24,8 +21,9 @@ Additional description about the project and its features.
 
 👤 **Author1**
 
-- GitHub: [@githubhandle](https://github.com/telanet)
-- Twitter: [@twitterhandle](https://twitter.com/Ben54647605)
+- GitHub: [@telanet](https://github.com/telanet)
+- GitHub: [@thenarain](https://github.com/thenarain)
+- Twitter: [@Ben54647605](https://twitter.com/Ben54647605)
 
 ## 🤝 Contributing
 
