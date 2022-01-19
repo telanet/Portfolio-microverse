@@ -547,7 +547,7 @@ ul {
   width: 100%;
 }
 
-.contact-form > div {
+.contact-form > .form-container {
   display: flex;
   margin-right: 24px;
   margin-left: 24px;
@@ -560,6 +560,10 @@ ul {
 
 .contact-form ul {
   min-width: 327px;
+}
+
+.contact-form li input:focus {
+  outline: none;
 }
 
 .interest > h2 {
