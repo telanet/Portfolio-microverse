@@ -562,6 +562,10 @@ ul {
   min-width: 327px;
 }
 
+.contact-form li input:focus {
+  outline: none;
+}
+
 .interest > h2 {
   font-family: 'Inter', Arial, Helvetica, sans-serif;
   font-size: 32px;
