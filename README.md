@@ -1,6 +1,6 @@
 # Project Name
 
--Contact section of Mobile Portfolio
+-Desktop version of Portfolio
 
 ![screenshot](./app_screenshot.png)
 
