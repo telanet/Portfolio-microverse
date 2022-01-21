@@ -2,7 +2,7 @@
 
 -Desktop version of Portfolio
 
-![screenshot](./app_screenshot.png)
+!(./app_screenshot.png)
 
 Additional description about the project and its features.
 
@@ -22,7 +22,6 @@ Additional description about the project and its features.
 👤 **Author1**
 
 - GitHub: [@telanet](https://github.com/telanet)
-- GitHub: [@thenarain](https://github.com/thenarain)
 - Twitter: [@Ben54647605](https://twitter.com/Ben54647605)
 
 ## 🤝 Contributing
