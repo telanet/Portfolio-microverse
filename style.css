@@ -188,32 +188,8 @@ header {
   align-items: center;
 }
 
-.nav-bar .icon-join {
-  width: 18px;
-  height: 12px;
-  position: relative;
-}
-
-.nav-bar .icon-join .bar {
-  width: 16px;
-  height: 2px;
-  background: #fff;
-  border-radius: 18%;
-  display: block;
-  position: absolute;
-  left: calc(50% - 16px / 2);
-}
-
-.nav-bar .icon-join .bar-1 {
-  top: 8.33%;
-}
-
-.nav-bar .icon-join .bar-2 {
-  top: calc(50% - 2px / 2);
-}
-
-.nav-bar .icon-join .bar-3 {
-  bottom: 8.33%;
+.hamburger-menu {
+  color: #fff;
 }
 
 .page-section {
@@ -495,6 +471,11 @@ footer ul li:hover {
   border-bottom: 1px solid #dbd8d7;
 }
 
+.contact-form input:focus {
+  outline: none;
+
+}
+
 .contact-form textarea {
   height: 114px;
   background: #fbf8f7;
@@ -529,6 +510,10 @@ footer .bottom-navigator {
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(3, 1fr);
   }
+
+.hamburger-menu {
+  display: none;
+}
 }
 
 @media screen and (min-width: 992px) {

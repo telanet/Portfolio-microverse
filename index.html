@@ -24,14 +24,9 @@
             <li class="list-item-text"><a href="#" class="link link-text">About</a></li>
             <li class="list-item-text"><a href="#" class="link link-text">Contact</a></li>
             <li class="list-item-text"><a href="#" class="link link-text fas fa-envelope"></a></li>
-          </ul>
-        <nav class="menu menu-icon" id="hamburger" >
-           <div class="icon-join">
-                <div class="bar bar1"></div>
-                <div class="bar bar2"></div>
-                <div class="bar bar3"></div>
-           </div>
-      </nav>
+         </ul>
+        <div class="hamburger-menu" id="hamburger-menu"><i class="fas fa-bars"></i>
+      </div>
     </nav>
 </header>
 
@@ -229,42 +224,34 @@ don't hestiate to contact me.
 
     <section class="page-section contact-section">
         <section class="contact-form" id="contact-section">
-            <div class="description-text">
-                <h2>I'm always interested in hearing about new projects, so if you'd like to chat please get in touch.</h2>
-            </div>
-            <div>    
+              
 
-            <form action="https://formspree.io/f/mrgjeazo" class="form" id="form" method="post">
-                <ul class="form-widgets ul-list vertical-list">
-                    <li>
-                        <input type="text" id="name" placeholder="Full name" required maxlength="30">
-                    </li>
-                    <li>
-                        <input type="email" name="user-email" id="email" placeholder="Email address" required>
-                    </li>
-                    <li>
-                        <textarea name="comment" id="comment" placeholder="Enter text here" maxlength="500" required></textarea>
-                        <small id="error"></small>
-                        </li>
-    
-                    <li>
-                        <button type="submit" name="sumbit-button" class="enable-button submit-button">Get in touch</button>
-                    </li>
-                </ul>
+            <form action="https://formspree.io/f/mrgjeazo" class="contact-form" id="form" method="post">
+              <div class="description-text">
+                <h2>I'm always interested in hearing about new projects, so if you'd like to chat please get in touch.</h2>
+              </div> 
+             
+              <ul class="form-widgets ul-list vertical-list">
+                <li><input type="text" name="full-name" maxlength="30" placeholder="Full name" required></li>
+                <li><input type="email" name="email-address" placeholder="Email address" required></li>
+                <li><textarea name="message" maxlength="500" placeholder="Enter text here" required></textarea></li>
+                <li><button type="submit" name="sumbit-button" class="enable-button submit-button">Get in touch</button></li>
+              </ul>
             </form>
-            </div>
+            
         </section> 
     </section>
     <footer>
         <hr class="h-rule">
-    <section class="bottom-navigation">
-        <ul class="social-media-icons ul-list horizontal-list">
-            <li class="list-item-icon"><a href="#" class="link link-icon fa fa-github"></a></li>
-            <li class="list-item-icon"><a href="#" class="link link-icon fa fa-linkedin"></a></li>
-            <li class="list-item-icon"><a href="#" class="link link-icon fa fa-angellist"></a></li>
-            <li class="list-item-icon"><a href="#" class="link link-icon fa fa-twitter"></a></li>
-            <li class="list-item-icon"><a href="#" class="link link-icon fab fa-medium-m"></a></li>
-        </ul>
+    <section class="bottom-navigator">
+      <ul class="social-media-icons ul-list horizontal-list">
+        <li class="list-item-icon"><a href="#" class="link link-icon fa fa-github"></a></li>
+        <li class="list-item-icon"><a href="#" class="link link-icon fa fa-linkedin"></a></li>
+        <li class="list-item-icon"><a href="#" class="link link-icon fa fa-angellist"></a></li>
+        <li class="list-item-icon"><a href="#" class="link link-icon fa fa-twitter"></a></li>
+        <li class="list-item-icon"><a href="#" class="link link-icon fab fa-medium-m"></a></li>
+      </ul>
+      <hr class="hr-bar">
     </section>
     <hr class="h-rule">
     </footer>
