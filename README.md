@@ -1,10 +1,17 @@
 # Project Name
 
--Desktop version of Portfolio
+-Portfolio Desktop Version
 
 ![screenshot](./app_screenshot.png)
 
-Additional description about the project and its features.
+# Getting Started
+-To get a local copy up and running follow these simple example steps.
+
+## Setup
+-To setup the webpage in your local up in the repo page: click on code (dropdown list) > Download as ZIP
+
+# Deployment
+-To run the project open folder (after extraction) then run index.html
 
 ## Built With
 

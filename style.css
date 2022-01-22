@@ -473,7 +473,6 @@ footer ul li:hover {
 
 .contact-form input:focus {
   outline: none;
-
 }
 
 .contact-form textarea {
@@ -511,9 +510,9 @@ footer .bottom-navigator {
     grid-template-rows: repeat(3, 1fr);
   }
 
-.hamburger-menu {
-  display: none;
-}
+  .hamburger-menu {
+    display: none;
+  }
 }
 
 @media screen and (min-width: 992px) {
