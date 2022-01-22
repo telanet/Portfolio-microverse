@@ -1,10 +1,17 @@
 # Project Name
 
--Contact section of Mobile Portfolio
+-Portfolio Desktop Version
 
 ![screenshot](./app_screenshot.png)
 
-Additional description about the project and its features.
+# Getting Started
+-To get a local copy up and running follow these simple example steps.
+
+## Setup
+-To setup the webpage in your local up in the repo page: click on code (dropdown list) > Download as ZIP
+
+# Deployment
+-To run the project open folder (after extraction) then run index.html
 
 ## Built With
 
@@ -22,7 +29,6 @@ Additional description about the project and its features.
 👤 **Author1**
 
 - GitHub: [@telanet](https://github.com/telanet)
-- GitHub: [@thenarain](https://github.com/thenarain)
 - Twitter: [@Ben54647605](https://twitter.com/Ben54647605)
 
 ## 🤝 Contributing
