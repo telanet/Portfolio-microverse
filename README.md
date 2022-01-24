@@ -1,6 +1,6 @@
 # Project Name
 
--Portfolio Desktop Version
+-Portfolio: application Deploy to Github pages
 
 ![screenshot](./app_screenshot.png)
 
@@ -17,6 +17,10 @@
 
 - HTML
 - CSS
+
+# Live Demo
+
+- https://telanet.github.io/Portfolio/
 
 
 ### Prerequisites
