@@ -91,17 +91,91 @@ h2.section-title {
   background-color: #212121;
 }
 
-.box-join-title {
+/* navbar styling */
+nav{
+  position: fixed;
   width: 100%;
+  padding: 20px 0;
+  z-index: 998;
+  transition: all 0.3s ease;
+  font-family: 'Ubuntu', sans-serif;
+  background-color: #3E3C3C;
+}
+nav.sticky{
+  background: #3E3C3C;
+  padding: 13px 0;
+}
+nav .navbar{
+  width: 90%;
   display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
+  justify-content: space-between;
+  align-items: center;
+  margin: auto;
+}
+nav .navbar .logo a{
+  font-weight: 500;
+  font-size: 35px;
+  color: #fff;
+  text-decoration: none;
+}
+nav.sticky .navbar .logo a{
+  color: #fff;
+}
+nav .navbar .menu{
+  display: flex;
+  position: relative;
+}
+nav .navbar .menu li{
+  list-style: none;
+  margin: 0 8px;
+}
+.navbar .menu a{
+  font-size: 18px;
+  font-weight: 500;
+  color: #fff;
+  padding: 6px 0;
+  transition: all 0.4s ease;
+}
+.navbar .menu a:hover{
+  color: #fff;
+}
+nav.sticky .menu a{
+  color: #FFF;
+}
+nav.sticky .menu a:hover{
+  color: #fff;
+}
+.navbar .media-icons a{
+  color: #fff;
+  font-size: 18px;
+  margin: 0 6px;
+}
+nav.sticky .media-icons a{
+  color: #FFF;
 }
 
-.box-join-title .h-rule {
-  margin-top: 24px;
+/* Side Navigation Menu Button CSS */
+nav .menu-btn,
+.navbar .menu .cancel-btn{
+  position: absolute;
+  color: #fff;
+  right: 30px;
+  top: 20px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: none;
 }
+nav .menu-btn{
+  color: #fff;
+}
+nav.sticky .menu-btn{
+  color: #FFF;
+}
+.navbar .menu .menu-btn{
+  color: #fff;
+}
+
 
 .section-subtitle {
   font-family: 'Roboto', sans-serif;
@@ -150,48 +224,6 @@ h2.section-title {
   border: 1px solid #f4f1f0;
   color: #5b5957;
 }
-
-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1000;
-}
-
-.nav-bar {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #3e3c3c;
-  padding: 16px 24px;
-}
-
-.nav-bar .logo {
-  font-weight: bold;
-  color: #fff;
-}
-
-.nav-bar .menu-list {
-  display: none;
-}
-
-.nav-bar .menu-list .link {
-  color: #fff;
-}
-
-.nav-bar .menu-icon {
-  width: 24px;
-  height: 24px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.hamburger-menu {
-  color: #fff;
-}
-
 .page-section {
   padding: 100px 24px;
   display: flex;
@@ -509,12 +541,51 @@ footer .bottom-navigator {
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(3, 1fr);
   }
-
-  .hamburger-menu {
+}
+@media (max-width: 750px) {
+  nav .navbar{
+    width: 90%;
+  }
+  nav .navbar .menu{
+    position: fixed;
+    left: -100%;
+    top: 0;
+    background: #3C3A39;
+    height: 100%;
+    width: 100%;
+    padding-top: 60px;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.5s ease;
+  }
+  nav .navbar .menu li {
+    border-bottom: 1px solid #fff;
+    padding: 10px;
+    font-size: 14px;
+  }
+  nav .navbar .menu ul li:last-child {
+    border-bottom: 0;
+  }
+  .navbar.active .menu{
+    left: 0;
+  }
+  nav .navbar .menu a{
+    font-size: 23px;
+    display: block;
+    color: #fff;
+    margin: 10px 0;
+  }
+  nav.sticky .menu a:hover{
+    color: #fff;
+  }
+  nav .navbar .media-icons{
     display: none;
   }
+  nav .menu-btn,
+  .navbar .menu .cancel-btn{
+    display: block;
+  }
 }
-
 @media screen and (min-width: 992px) {
   h1.section-title {
     font-size: 72px;
@@ -530,29 +601,6 @@ footer .bottom-navigator {
     font-size: 20px;
     line-height: 32px;
   }
-
-  .box-join-title {
-    width: 100%;
-    flex-direction: row;
-    align-items: center;
-  }
-
-  .box-join-title .h-rule {
-    margin-top: 0;
-  }
-
-  .nav-bar {
-    padding: 16px 100px;
-  }
-
-  .nav-bar .menu-list {
-    display: flex;
-  }
-
-  .nav-bar .menu-icon {
-    display: none;
-  }
-
   .page-section {
     padding: 100px 100px;
   }
