@@ -6,7 +6,7 @@
 
 body {
   width: 100%;
-  font-family: 'Inter', sans-serif;
+  font-family: Inter, sans-serif;
   font-style: normal;
   font-weight: normal;
   display: flex;
@@ -70,7 +70,7 @@ a.link-icon {
 
 h1.section-title,
 h2.section-title {
-  font-family: 'Crete Round', serif;
+  font-family: "Crete Round", serif;
   font-weight: normal;
   font-size: 54px;
   line-height: 64px;
@@ -98,7 +98,7 @@ nav {
   padding: 20px 0;
   z-index: 998;
   transition: all 0.3s ease;
-  font-family: 'Ubuntu', sans-serif;
+  font-family: Ubuntu, sans-serif;
   background-color: #3e3c3c;
 }
 
@@ -115,11 +115,20 @@ nav .navbar {
   margin: auto;
 }
 
+.navbar .menu a {
+  font-size: 18px;
+  margin: 0 6px;
+}
+
 nav .navbar .logo a {
   font-weight: 500;
-  font-size: 35px;
   color: #fff;
-  text-decoration: none;
+  padding: 6px 0;
+  transition: all 0.4s ease;
+}
+
+.navbar .menu a:hover {
+  color: #fff;
 }
 
 nav.sticky .navbar .logo a {
@@ -134,18 +143,6 @@ nav .navbar .menu {
 nav .navbar .menu li {
   list-style: none;
   margin: 0 8px;
-}
-
-.navbar .menu a {
-  font-size: 18px;
-  font-weight: 500;
-  color: #fff;
-  padding: 6px 0;
-  transition: all 0.4s ease;
-}
-
-.navbar .menu a:hover {
-  color: #fff;
 }
 
 /* Side Navigation Menu Button CSS */
@@ -174,7 +171,7 @@ nav.sticky .menu-btn {
 }
 
 .section-subtitle {
-  font-family: 'Roboto', sans-serif;
+  font-family: Roboto, sans-serif;
   font-weight: bold;
   font-size: 24px;
   line-height: 32px;
@@ -182,7 +179,7 @@ nav.sticky .menu-btn {
 }
 
 .description-text {
-  font-family: 'Poppins', sans-serif;
+  font-family: Poppins, sans-serif;
   font-size: 16px;
   line-height: 24px;
   color: #fff5e1;
@@ -212,7 +209,7 @@ nav.sticky .menu-btn {
 .enable-button:active {
   background: #ff6b00;
   border: 1px solid #ff6b00;
-  color: rgba(244, 241, 240, 1);
+  color: rgb(244 241 240 / 100%);
 }
 
 .enable-button:disabled {
@@ -235,23 +232,15 @@ nav.sticky .menu-btn {
 
 .first-section {
   background: #1c1a19;
-  background-image: url(../images/illustration-header-mobile.svg);
+  background-image: url("../images/illustration-header-mobile.svg");
   background-repeat: no-repeat;
   background-position: right bottom;
   background-size: 150px auto;
-  padding: 150px 24px 100px 24px;
+  padding: 150px 24px 100px;
 }
 
 .first-section .social-media-icons .link {
   color: #dbd8d7;
-}
-
-footer ul li {
-  transition: transform 0.3s ease-in;
-}
-
-footer ul li:hover {
-  transform: scale(1.1);
 }
 
 .works-section .section-title {
@@ -303,7 +292,7 @@ footer ul li:hover {
 }
 
 .works-section .post-title {
-  font-family: 'Crete Round', serif;
+  font-family: "Crete Round", serif;
   font-size: 32px;
   line-height: 44px;
   display: flex;
@@ -360,7 +349,7 @@ footer ul li:hover {
 .grid-container .post-article {
   max-width: 327px;
   height: auto;
-  background-image: url(../images/img-placeholder-articles.png);
+  background-image: url("../images/img-placeholder-articles.png");
   background-repeat: no-repeat;
   display: flex;
   flex-direction: column;
@@ -375,7 +364,7 @@ footer ul li:hover {
 }
 
 .post-article .description-text {
-  font-family: 'Inter', sans-serif;
+  font-family: Inter, sans-serif;
   color: #fff;
 }
 
@@ -389,7 +378,7 @@ footer ul li:hover {
 
 .aboutme-section {
   background: #1c1a19;
-  background-image: url(../images/illustration-aboutme-mobile.svg);
+  background-image: url("../images/illustration-aboutme-mobile.svg");
   background-repeat: no-repeat;
   background-position: right 370px;
   background-size: 160px auto;
@@ -402,7 +391,7 @@ footer ul li:hover {
 
 .aboutme-section .h-rule {
   background-color: #fff5e1;
-  margin: 200px 0 120px 0;
+  margin: 200px 0 120px;
 }
 
 .aboutme-section .skills {
@@ -434,16 +423,16 @@ footer ul li:hover {
 }
 
 .aboutme-section .skills .languages-skills span {
-  background-image: url('../icons/rectangle-roted.png');
+  background-image: url("../icons/rectangle-roted.png");
   background-size: 22px 22px;
 }
 
 .aboutme-section .skills .frameworks-skills span {
-  background-image: url('../icons/rectangle.png');
+  background-image: url("../icons/rectangle.png");
 }
 
 .aboutme-section .skills .additional-skills span {
-  background-image: url('../icons/disc.png');
+  background-image: url("../icons/disc.png");
 }
 
 .aboutme-section .skills .ul-sublist {
@@ -484,7 +473,7 @@ footer ul li:hover {
   width: 100%;
   border: none;
   padding: 5px 10px;
-  font-family: 'Inter', sans-serif;
+  font-family: Inter, sans-serif;
   font-style: normal;
   font-weight: normal;
   font-size: 15px;
@@ -610,14 +599,14 @@ footer .bottom-navigator {
   }
 
   .page-section {
-    padding: 100px 100px;
+    padding: 100px;
   }
 
   .first-section {
-    background-image: url(../images/illustration-header.svg);
+    background-image: url("../images/illustration-header.svg");
     background-position: right center;
     background-size: auto 600px;
-    padding: 150px 100px 100px 100px;
+    padding: 150px 100px 100px;
     position: relative;
   }
 
@@ -694,12 +683,8 @@ footer .bottom-navigator {
     transition: transform 0.3s ease-in;
   }
 
-  footer ul li:hover {
-    transform: scale(1.5);
-  }
-
   .aboutme-section {
-    background-image: url(../images/illustration-aboutme.svg);
+    background-image: url("../images/illustration-aboutme.svg");
     background-position: right 150px;
     background-size: 450px auto;
   }
@@ -711,7 +696,7 @@ footer .bottom-navigator {
   }
 
   .aboutme-section .h-rule {
-    margin: 127px 0 100px 0;
+    margin: 127px 0 100px;
   }
 
   .aboutme-section .skills {
@@ -775,7 +760,7 @@ footer .bottom-navigator {
     animation: colorChange 0.5s forwards, textChange 0.5s forwards;
   }
 
-  @keyframes colorChange {
+  @keyframes color-change {
     0% {
       color: white;
     }
@@ -785,7 +770,7 @@ footer .bottom-navigator {
     }
   }
 
-  @keyframes textChange {
+  @keyframes text-change {
     0% {
       font-size: 14px;
     }
@@ -795,7 +780,7 @@ footer .bottom-navigator {
     }
   }
 
-  @keyframes scaleUp {
+  @keyframes scale-up {
     0% {
       transform: scale(1);
     }
