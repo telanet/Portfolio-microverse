@@ -1,17 +1,16 @@
 'use strict';
 
 const assignDisabledRanges = require('./assignDisabledRanges');
-const get = require('lodash/get');
 const getOsEol = require('./utils/getOsEol');
 const reportUnknownRuleNames = require('./reportUnknownRuleNames');
-const rulesOrder = require('./rules');
+const rules = require('./rules');
 
-/** @typedef {import('stylelint').StylelintStandaloneOptions} StylelintStandaloneOptions */
+/** @typedef {import('stylelint').LinterOptions} LinterOptions */
 /** @typedef {import('stylelint').PostcssResult} PostcssResult */
-/** @typedef {import('stylelint').StylelintConfig} StylelintConfig */
+/** @typedef {import('stylelint').Config} StylelintConfig */
 
 /**
- * @param {StylelintStandaloneOptions} stylelintOptions
+ * @param {LinterOptions} stylelintOptions
  * @param {PostcssResult} postcssResult
  * @param {StylelintConfig} config
  * @returns {Promise<any>}
@@ -19,11 +18,12 @@ const rulesOrder = require('./rules');
 function lintPostcssResult(stylelintOptions, postcssResult, config) {
 	postcssResult.stylelint.ruleSeverities = {};
 	postcssResult.stylelint.customMessages = {};
+	postcssResult.stylelint.ruleMetadata = {};
 	postcssResult.stylelint.stylelintError = false;
 	postcssResult.stylelint.quiet = config.quiet;
 	postcssResult.stylelint.config = config;
 
-	/** @type {string} */
+	/** @type {string | undefined} */
 	let newline;
 	const postcssDoc = postcssResult.root;
 
@@ -32,7 +32,6 @@ function lintPostcssResult(stylelintOptions, postcssResult, config) {
 			throw new Error('Unexpected Postcss root object!');
 		}
 
-		// @ts-ignore TODO TYPES property css does not exists
 		const newlineMatch = postcssDoc.source && postcssDoc.source.input.css.match(/\r?\n/);
 
 		newline = newlineMatch ? newlineMatch[0] : getOsEol();
@@ -46,10 +45,9 @@ function lintPostcssResult(stylelintOptions, postcssResult, config) {
 		postcssResult.stylelint.disableWritingFix = true;
 	}
 
-	const postcssRoots = /** @type {import('postcss').Root[]} */ (postcssDoc &&
-	postcssDoc.constructor.name === 'Document'
-		? postcssDoc.nodes
-		: [postcssDoc]);
+	const postcssRoots = /** @type {import('postcss').Root[]} */ (
+		postcssDoc && postcssDoc.constructor.name === 'Document' ? postcssDoc.nodes : [postcssDoc]
+	);
 
 	// Promises for the rules. Although the rule code runs synchronously now,
 	// the use of Promises makes it compatible with the possibility of async
@@ -57,14 +55,14 @@ function lintPostcssResult(stylelintOptions, postcssResult, config) {
 	/** @type {Array<Promise<any>>} */
 	const performRules = [];
 
-	const rules = config.rules
-		? Object.keys(config.rules).sort(
-				(a, b) => Object.keys(rulesOrder).indexOf(a) - Object.keys(rulesOrder).indexOf(b),
-		  )
+	const rulesOrder = Object.keys(rules);
+	const ruleNames = config.rules
+		? Object.keys(config.rules).sort((a, b) => rulesOrder.indexOf(a) - rulesOrder.indexOf(b))
 		: [];
 
-	rules.forEach((ruleName) => {
-		const ruleFunction = rulesOrder[ruleName] || get(config, ['pluginFunctions', ruleName]);
+	for (const ruleName of ruleNames) {
+		const ruleFunction =
+			rules[ruleName] || (config.pluginFunctions && config.pluginFunctions[ruleName]);
 
 		if (ruleFunction === undefined) {
 			performRules.push(
@@ -75,13 +73,13 @@ function lintPostcssResult(stylelintOptions, postcssResult, config) {
 				),
 			);
 
-			return;
+			continue;
 		}
 
-		const ruleSettings = get(config, ['rules', ruleName]);
+		const ruleSettings = config.rules && config.rules[ruleName];
 
 		if (ruleSettings === null || ruleSettings[0] === null) {
-			return;
+			continue;
 		}
 
 		const primaryOption = ruleSettings[0];
@@ -89,19 +87,24 @@ function lintPostcssResult(stylelintOptions, postcssResult, config) {
 
 		// Log the rule's severity in the PostCSS result
 		const defaultSeverity = config.defaultSeverity || 'error';
+		// disableFix in secondary option
+		const disableFix = (secondaryOptions && secondaryOptions.disableFix === true) || false;
 
-		postcssResult.stylelint.ruleSeverities[ruleName] = get(
-			secondaryOptions,
-			'severity',
-			defaultSeverity,
-		);
-		postcssResult.stylelint.customMessages[ruleName] = get(secondaryOptions, 'message');
+		if (disableFix) {
+			postcssResult.stylelint.ruleDisableFix = true;
+		}
+
+		postcssResult.stylelint.ruleSeverities[ruleName] =
+			(secondaryOptions && secondaryOptions.severity) || defaultSeverity;
+		postcssResult.stylelint.customMessages[ruleName] = secondaryOptions && secondaryOptions.message;
+		postcssResult.stylelint.ruleMetadata[ruleName] = ruleFunction.meta || {};
 
 		performRules.push(
 			Promise.all(
 				postcssRoots.map((postcssRoot) =>
 					ruleFunction(primaryOption, secondaryOptions, {
 						fix:
+							!disableFix &&
 							stylelintOptions.fix &&
 							// Next two conditionals are temporary measures until #2643 is resolved
 							isFileFixCompatible &&
@@ -111,7 +114,7 @@ function lintPostcssResult(stylelintOptions, postcssResult, config) {
 				),
 			),
 		);
-	});
+	}
 
 	return Promise.all(performRules);
 }

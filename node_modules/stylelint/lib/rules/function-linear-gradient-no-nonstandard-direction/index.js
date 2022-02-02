@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 'use strict';
 
 const declarationValueIndex = require('../../utils/declarationValueIndex');
@@ -17,6 +15,14 @@ const messages = ruleMessages(ruleName, {
 	rejected: 'Unexpected nonstandard direction',
 });
 
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/function-linear-gradient-no-nonstandard-direction',
+};
+
+/**
+ * @param {string} source
+ * @param {boolean} withToPrefix
+ */
 function isStandardDirection(source, withToPrefix) {
 	const regexp = withToPrefix
 		? /^to (top|left|bottom|right)(?: (top|left|bottom|right))?$/
@@ -40,9 +46,10 @@ function isStandardDirection(source, withToPrefix) {
 	return false;
 }
 
-function rule(actual) {
+/** @type {import('stylelint').Rule} */
+const rule = (primary) => {
 	return (root, result) => {
-		const validOptions = validateOptions(result, ruleName, { actual });
+		const validOptions = validateOptions(result, ruleName, { actual: primary });
 
 		if (!validOptions) {
 			return;
@@ -103,8 +110,9 @@ function rule(actual) {
 			});
 		});
 	};
-}
+};
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

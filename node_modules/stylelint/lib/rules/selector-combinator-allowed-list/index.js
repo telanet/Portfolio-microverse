@@ -1,14 +1,12 @@
-// @ts-nocheck
-
 'use strict';
 
-const _ = require('lodash');
 const isStandardSyntaxCombinator = require('../../utils/isStandardSyntaxCombinator');
 const isStandardSyntaxRule = require('../../utils/isStandardSyntaxRule');
 const parseSelector = require('../../utils/parseSelector');
 const report = require('../../utils/report');
 const ruleMessages = require('../../utils/ruleMessages');
 const validateOptions = require('../../utils/validateOptions');
+const { isString } = require('../../utils/validateTypes');
 
 const ruleName = 'selector-combinator-allowed-list';
 
@@ -16,11 +14,16 @@ const messages = ruleMessages(ruleName, {
 	rejected: (combinator) => `Unexpected combinator "${combinator}"`,
 });
 
-function rule(list) {
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/selector-combinator-allowed-list',
+};
+
+/** @type {import('stylelint').Rule} */
+const rule = (primary) => {
 	return (root, result) => {
 		const validOptions = validateOptions(result, ruleName, {
-			actual: list,
-			possible: [_.isString],
+			actual: primary,
+			possible: [isString],
 		});
 
 		if (!validOptions) {
@@ -42,7 +45,7 @@ function rule(list) {
 
 					const value = normalizeCombinator(combinatorNode.value);
 
-					if (list.includes(value)) {
+					if (primary.includes(value)) {
 						return;
 					}
 
@@ -57,8 +60,12 @@ function rule(list) {
 			});
 		});
 	};
-}
+};
 
+/**
+ * @param {string} value
+ * @returns {string}
+ */
 function normalizeCombinator(value) {
 	return value.replace(/\s+/g, ' ');
 }
@@ -67,4 +74,5 @@ rule.primaryOptionArray = true;
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

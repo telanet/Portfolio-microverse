@@ -2,12 +2,12 @@
 
 'use strict';
 
-const _ = require('lodash');
 const getDeclarationValue = require('../../utils/getDeclarationValue');
 const report = require('../../utils/report');
 const ruleMessages = require('../../utils/ruleMessages');
 const setDeclarationValue = require('../../utils/setDeclarationValue');
 const validateOptions = require('../../utils/validateOptions');
+const { isNumber } = require('../../utils/validateTypes');
 
 const ruleName = 'value-list-max-empty-lines';
 
@@ -15,13 +15,17 @@ const messages = ruleMessages(ruleName, {
 	expected: (max) => `Expected no more than ${max} empty ${max === 1 ? 'line' : 'lines'}`,
 });
 
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/value-list-max-empty-lines',
+};
+
 function rule(max, options, context) {
 	const maxAdjacentNewlines = max + 1;
 
 	return (root, result) => {
 		const validOptions = validateOptions(result, ruleName, {
 			actual: max,
-			possible: _.isNumber,
+			possible: isNumber,
 		});
 
 		if (!validOptions) {
@@ -57,4 +61,5 @@ function rule(max, options, context) {
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

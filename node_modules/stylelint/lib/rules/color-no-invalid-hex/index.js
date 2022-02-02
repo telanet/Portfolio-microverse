@@ -1,8 +1,7 @@
-// @ts-nocheck
-
 'use strict';
 
 const declarationValueIndex = require('../../utils/declarationValueIndex');
+const isStandardSyntaxHexColor = require('../../utils/isStandardSyntaxHexColor');
 const isValidHex = require('../../utils/isValidHex');
 const report = require('../../utils/report');
 const ruleMessages = require('../../utils/ruleMessages');
@@ -15,15 +14,24 @@ const messages = ruleMessages(ruleName, {
 	rejected: (hex) => `Unexpected invalid hex color "${hex}"`,
 });
 
-function rule(actual) {
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/color-no-invalid-hex',
+};
+
+/** @type {import('stylelint').Rule} */
+const rule = (primary) => {
 	return (root, result) => {
-		const validOptions = validateOptions(result, ruleName, { actual });
+		const validOptions = validateOptions(result, ruleName, { actual: primary });
 
 		if (!validOptions) {
 			return;
 		}
 
 		root.walkDecls((decl) => {
+			if (!isStandardSyntaxHexColor(decl.value)) {
+				return;
+			}
+
 			valueParser(decl.value).walk(({ value, type, sourceIndex }) => {
 				if (type === 'function' && value.endsWith('url')) return false;
 
@@ -47,8 +55,9 @@ function rule(actual) {
 			});
 		});
 	};
-}
+};
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

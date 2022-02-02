@@ -1,13 +1,11 @@
-// @ts-nocheck
-
 'use strict';
 
-const _ = require('lodash');
 const matchesStringOrRegExp = require('../../utils/matchesStringOrRegExp');
 const report = require('../../utils/report');
 const ruleMessages = require('../../utils/ruleMessages');
 const validateOptions = require('../../utils/validateOptions');
 const vendor = require('../../utils/vendor');
+const { isPlainObject } = require('is-plain-object');
 
 const ruleName = 'declaration-property-value-allowed-list';
 
@@ -15,11 +13,16 @@ const messages = ruleMessages(ruleName, {
 	rejected: (property, value) => `Unexpected value "${value}" for property "${property}"`,
 });
 
-function rule(list) {
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/declaration-property-value-allowed-list',
+};
+
+/** @type {import('stylelint').Rule<Record<string, (string | RegExp)[]>>} */
+const rule = (primary) => {
 	return (root, result) => {
 		const validOptions = validateOptions(result, ruleName, {
-			actual: list,
-			possible: [_.isObject],
+			actual: primary,
+			possible: [isPlainObject],
 		});
 
 		if (!validOptions) {
@@ -31,11 +34,17 @@ function rule(list) {
 			const value = decl.value;
 
 			const unprefixedProp = vendor.unprefixed(prop);
-			const propList = _.find(list, (values, propIdentifier) =>
+			const propKey = Object.keys(primary).find((propIdentifier) =>
 				matchesStringOrRegExp(unprefixedProp, propIdentifier),
 			);
 
-			if (_.isEmpty(propList)) {
+			if (!propKey) {
+				return;
+			}
+
+			const propList = primary[propKey];
+
+			if (!propList || propList.length === 0) {
 				return;
 			}
 
@@ -51,8 +60,9 @@ function rule(list) {
 			});
 		});
 	};
-}
+};
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

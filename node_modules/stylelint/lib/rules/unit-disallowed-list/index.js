@@ -2,7 +2,6 @@
 
 'use strict';
 
-const _ = require('lodash');
 const atRuleParamIndex = require('../../utils/atRuleParamIndex');
 const declarationValueIndex = require('../../utils/declarationValueIndex');
 const getUnitFromValueNode = require('../../utils/getUnitFromValueNode');
@@ -13,6 +12,7 @@ const ruleMessages = require('../../utils/ruleMessages');
 const validateObjectWithArrayProps = require('../../utils/validateObjectWithArrayProps');
 const validateOptions = require('../../utils/validateOptions');
 const valueParser = require('postcss-value-parser');
+const { isRegExp, isString } = require('../../utils/validateTypes');
 
 const ruleName = 'unit-disallowed-list';
 
@@ -20,16 +20,20 @@ const messages = ruleMessages(ruleName, {
 	rejected: (unit) => `Unexpected unit "${unit}"`,
 });
 
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/unit-disallowed-list',
+};
+
 // a function to retrieve only the media feature name
 // could be externalized in an utils function if needed in other code
 const getMediaFeatureName = (mediaFeatureNode) => {
 	const value = mediaFeatureNode.value.toLowerCase();
 
-	return /((-?\w*)*)/i.exec(value)[1];
+	return /((?:-?\w*)*)/.exec(value)[1];
 };
 
 function rule(listInput, options) {
-	const list = [].concat(listInput);
+	const list = [listInput].flat();
 
 	return (root, result) => {
 		const validOptions = validateOptions(
@@ -37,14 +41,14 @@ function rule(listInput, options) {
 			ruleName,
 			{
 				actual: list,
-				possible: [_.isString],
+				possible: [isString],
 			},
 			{
 				optional: true,
 				actual: options,
 				possible: {
-					ignoreProperties: validateObjectWithArrayProps([_.isString, _.isRegExp]),
-					ignoreMediaFeatureNames: validateObjectWithArrayProps([_.isString, _.isRegExp]),
+					ignoreProperties: validateObjectWithArrayProps([isString, isRegExp]),
+					ignoreMediaFeatureNames: validateObjectWithArrayProps([isString, isRegExp]),
 				},
 			},
 		);
@@ -56,7 +60,7 @@ function rule(listInput, options) {
 		function check(node, nodeIndex, valueNode, input, option) {
 			const unit = getUnitFromValueNode(valueNode);
 
-			// There is not unit or it is not configured as a violation
+			// There is not unit or it is not configured as a problem
 			if (!unit || (unit && !list.includes(unit.toLowerCase()))) {
 				return;
 			}
@@ -122,4 +126,5 @@ rule.primaryOptionArray = true;
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 'use strict';
 
 const isStandardSyntaxRule = require('../../utils/isStandardSyntaxRule');
@@ -17,12 +15,17 @@ const messages = ruleMessages(ruleName, {
 	rejectedAfterMultiLine: () => 'Unexpected whitespace after "," in a multi-line list',
 });
 
-function rule(expectation, options, context) {
-	const checker = whitespaceChecker('newline', expectation, messages);
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/selector-list-comma-newline-after',
+};
+
+/** @type {import('stylelint').Rule} */
+const rule = (primary, _secondaryOptions, context) => {
+	const checker = whitespaceChecker('newline', primary, messages);
 
 	return (root, result) => {
 		const validOptions = validateOptions(result, ruleName, {
-			actual: expectation,
+			actual: primary,
 			possible: ['always', 'always-multi-line', 'never-multi-line'],
 		});
 
@@ -40,6 +43,7 @@ function rule(expectation, options, context) {
 			// b {}
 			const selector = ruleNode.raws.selector ? ruleNode.raws.selector.raw : ruleNode.selector;
 
+			/** @type {number[]} */
 			const fixIndices = [];
 
 			styleSearch(
@@ -87,20 +91,18 @@ function rule(expectation, options, context) {
 			if (fixIndices.length) {
 				let fixedSelector = selector;
 
-				fixIndices
-					.sort((a, b) => b - a)
-					.forEach((index) => {
-						const beforeSelector = fixedSelector.slice(0, index);
-						let afterSelector = fixedSelector.slice(index);
+				for (const index of fixIndices.sort((a, b) => b - a)) {
+					const beforeSelector = fixedSelector.slice(0, index);
+					let afterSelector = fixedSelector.slice(index);
 
-						if (expectation.startsWith('always')) {
-							afterSelector = context.newline + afterSelector;
-						} else if (expectation.startsWith('never-multi-line')) {
-							afterSelector = afterSelector.replace(/^\s*/, '');
-						}
+					if (primary.startsWith('always')) {
+						afterSelector = context.newline + afterSelector;
+					} else if (primary.startsWith('never-multi-line')) {
+						afterSelector = afterSelector.replace(/^\s*/, '');
+					}
 
-						fixedSelector = beforeSelector + afterSelector;
-					});
+					fixedSelector = beforeSelector + afterSelector;
+				}
 
 				if (ruleNode.raws.selector) {
 					ruleNode.raws.selector.raw = fixedSelector;
@@ -110,8 +112,9 @@ function rule(expectation, options, context) {
 			}
 		});
 	};
-}
+};
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

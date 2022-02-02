@@ -16,6 +16,10 @@ const messages = ruleMessages(ruleName, {
 	expected: (actual, expected) => `Expected "${actual}" to be "${expected}"`,
 });
 
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/unit-case',
+};
+
 function rule(expectation, options, context) {
 	return (root, result) => {
 		const validOptions = validateOptions(result, ruleName, {
@@ -28,7 +32,7 @@ function rule(expectation, options, context) {
 		}
 
 		function check(node, checkedValue, getIndex) {
-			const violations = [];
+			const problems = [];
 
 			function processValue(valueNode) {
 				const unit = getUnitFromValueNode(valueNode);
@@ -43,7 +47,7 @@ function rule(expectation, options, context) {
 					return false;
 				}
 
-				violations.push({
+				problems.push({
 					index: getIndex(node) + valueNode.sourceIndex,
 					message: messages.expected(unit, expectedUnit),
 				});
@@ -77,7 +81,7 @@ function rule(expectation, options, context) {
 				}
 			});
 
-			if (violations.length) {
+			if (problems.length) {
 				if (context.fix) {
 					if (node.name === 'media') {
 						node.params = parsedValue.toString();
@@ -85,7 +89,7 @@ function rule(expectation, options, context) {
 						node.value = parsedValue.toString();
 					}
 				} else {
-					violations.forEach((err) => {
+					for (const err of problems) {
 						report({
 							index: err.index,
 							message: err.message,
@@ -93,7 +97,7 @@ function rule(expectation, options, context) {
 							result,
 							ruleName,
 						});
-					});
+					}
 				}
 			}
 		}
@@ -111,4 +115,5 @@ function rule(expectation, options, context) {
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

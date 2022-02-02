@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 'use strict';
 
 const declarationValueIndex = require('../../utils/declarationValueIndex');
@@ -25,10 +23,15 @@ const messages = ruleMessages(ruleName, {
 	rejectedClosingSingleLine: 'Unexpected whitespace before ")" in a single-line function',
 });
 
-function rule(expectation, options, context) {
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/function-parentheses-space-inside',
+};
+
+/** @type {import('stylelint').Rule} */
+const rule = (primary, _secondaryOptions, context) => {
 	return (root, result) => {
 		const validOptions = validateOptions(result, ruleName, {
-			actual: expectation,
+			actual: primary,
 			possible: ['always', 'never', 'always-single-line', 'never-single-line'],
 		});
 
@@ -66,7 +69,7 @@ function rule(expectation, options, context) {
 
 				const openingIndex = valueNode.sourceIndex + valueNode.value.length + 1;
 
-				if (expectation === 'always' && valueNode.before !== ' ') {
+				if (primary === 'always' && valueNode.before !== ' ') {
 					if (context.fix) {
 						hasFixed = true;
 						valueNode.before = ' ';
@@ -75,7 +78,7 @@ function rule(expectation, options, context) {
 					}
 				}
 
-				if (expectation === 'never' && valueNode.before !== '') {
+				if (primary === 'never' && valueNode.before !== '') {
 					if (context.fix) {
 						hasFixed = true;
 						valueNode.before = '';
@@ -84,7 +87,7 @@ function rule(expectation, options, context) {
 					}
 				}
 
-				if (isSingleLine && expectation === 'always-single-line' && valueNode.before !== ' ') {
+				if (isSingleLine && primary === 'always-single-line' && valueNode.before !== ' ') {
 					if (context.fix) {
 						hasFixed = true;
 						valueNode.before = ' ';
@@ -93,7 +96,7 @@ function rule(expectation, options, context) {
 					}
 				}
 
-				if (isSingleLine && expectation === 'never-single-line' && valueNode.before !== '') {
+				if (isSingleLine && primary === 'never-single-line' && valueNode.before !== '') {
 					if (context.fix) {
 						hasFixed = true;
 						valueNode.before = '';
@@ -106,7 +109,7 @@ function rule(expectation, options, context) {
 
 				const closingIndex = valueNode.sourceIndex + functionString.length - 2;
 
-				if (expectation === 'always' && valueNode.after !== ' ') {
+				if (primary === 'always' && valueNode.after !== ' ') {
 					if (context.fix) {
 						hasFixed = true;
 						valueNode.after = ' ';
@@ -115,7 +118,7 @@ function rule(expectation, options, context) {
 					}
 				}
 
-				if (expectation === 'never' && valueNode.after !== '') {
+				if (primary === 'never' && valueNode.after !== '') {
 					if (context.fix) {
 						hasFixed = true;
 						valueNode.after = '';
@@ -124,7 +127,7 @@ function rule(expectation, options, context) {
 					}
 				}
 
-				if (isSingleLine && expectation === 'always-single-line' && valueNode.after !== ' ') {
+				if (isSingleLine && primary === 'always-single-line' && valueNode.after !== ' ') {
 					if (context.fix) {
 						hasFixed = true;
 						valueNode.after = ' ';
@@ -133,7 +136,7 @@ function rule(expectation, options, context) {
 					}
 				}
 
-				if (isSingleLine && expectation === 'never-single-line' && valueNode.after !== '') {
+				if (isSingleLine && primary === 'never-single-line' && valueNode.after !== '') {
 					if (context.fix) {
 						hasFixed = true;
 						valueNode.after = '';
@@ -147,6 +150,10 @@ function rule(expectation, options, context) {
 				setDeclarationValue(decl, parsedValue.toString());
 			}
 
+			/**
+			 * @param {string} message
+			 * @param {number} offset
+			 */
 			function complain(message, offset) {
 				report({
 					ruleName,
@@ -158,8 +165,9 @@ function rule(expectation, options, context) {
 			}
 		});
 	};
-}
+};
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

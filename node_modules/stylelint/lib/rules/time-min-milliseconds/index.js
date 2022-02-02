@@ -2,7 +2,6 @@
 
 'use strict';
 
-const _ = require('lodash');
 const declarationValueIndex = require('../../utils/declarationValueIndex');
 const keywordSets = require('../../reference/keywordSets');
 const optionsMatches = require('../../utils/optionsMatches');
@@ -12,12 +11,17 @@ const ruleMessages = require('../../utils/ruleMessages');
 const validateOptions = require('../../utils/validateOptions');
 const valueParser = require('postcss-value-parser');
 const vendor = require('../../utils/vendor');
+const { isNumber } = require('../../utils/validateTypes');
 
 const ruleName = 'time-min-milliseconds';
 
 const messages = ruleMessages(ruleName, {
 	expected: (time) => `Expected a minimum of ${time} milliseconds`,
 });
+
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/time-min-milliseconds',
+};
 
 const DELAY_PROPERTIES = new Set(['animation-delay', 'transition-delay']);
 
@@ -28,7 +32,7 @@ function rule(minimum, options) {
 			ruleName,
 			{
 				actual: minimum,
-				possible: _.isNumber,
+				possible: isNumber,
 			},
 			{
 				actual: options,
@@ -139,4 +143,5 @@ function rule(minimum, options) {
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

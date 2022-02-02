@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 'use strict';
 
 const isStandardSyntaxAtRule = require('../../utils/isStandardSyntaxAtRule');
@@ -13,16 +11,24 @@ const messages = ruleMessages(ruleName, {
 	expected: (actual, expected) => `Expected "${actual}" to be "${expected}"`,
 });
 
-function rule(expectation, options, context) {
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/at-rule-name-case',
+};
+
+/** @type {import('stylelint').Rule} */
+const rule = (primary, _secondary, context) => {
 	return (root, result) => {
 		const validOptions = validateOptions(result, ruleName, {
-			actual: expectation,
+			actual: primary,
 			possible: ['lower', 'upper'],
 		});
 
 		if (!validOptions) {
 			return;
 		}
+
+		/** @type {'lower' | 'upper'} */
+		const expectation = primary;
 
 		root.walkAtRules((atRule) => {
 			if (!isStandardSyntaxAtRule(atRule)) {
@@ -51,8 +57,9 @@ function rule(expectation, options, context) {
 			});
 		});
 	};
-}
+};
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

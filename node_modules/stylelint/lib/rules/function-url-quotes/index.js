@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 'use strict';
 
 const atRuleParamIndex = require('../../utils/atRuleParamIndex');
@@ -13,21 +11,26 @@ const validateOptions = require('../../utils/validateOptions');
 const ruleName = 'function-url-quotes';
 
 const messages = ruleMessages(ruleName, {
-	expected: () => 'Expected quotes',
-	rejected: () => 'Unexpected quotes',
+	expected: (functionName) => `Expected quotes around "${functionName}" function argument`,
+	rejected: (functionName) => `Unexpected quotes around "${functionName}" function argument`,
 });
 
-function rule(expectation, options) {
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/function-url-quotes',
+};
+
+/** @type {import('stylelint').Rule} */
+const rule = (primary, secondaryOptions) => {
 	return (root, result) => {
 		const validOptions = validateOptions(
 			result,
 			ruleName,
 			{
-				actual: expectation,
+				actual: primary,
 				possible: ['always', 'never'],
 			},
 			{
-				actual: options,
+				actual: secondaryOptions,
 				possible: {
 					except: ['empty'],
 				},
@@ -42,12 +45,18 @@ function rule(expectation, options) {
 		root.walkAtRules(checkAtRuleParams);
 		root.walkDecls(checkDeclParams);
 
+		/**
+		 * @param {import('postcss').Declaration} decl
+		 */
 		function checkDeclParams(decl) {
 			functionArgumentsSearch(decl.toString().toLowerCase(), 'url', (args, index) => {
 				checkArgs(args, decl, index, 'url');
 			});
 		}
 
+		/**
+		 * @param {import('postcss').AtRule} atRule
+		 */
 		function checkAtRuleParams(atRule) {
 			const atRuleParamsLowerCase = atRule.params.toLowerCase();
 
@@ -62,8 +71,14 @@ function rule(expectation, options) {
 			});
 		}
 
+		/**
+		 * @param {string} args
+		 * @param {import('postcss').Node} node
+		 * @param {number} index
+		 * @param {string} functionName
+		 */
 		function checkArgs(args, node, index, functionName) {
-			let shouldHasQuotes = expectation === 'always';
+			let shouldHasQuotes = primary === 'always';
 
 			const leftTrimmedArgs = args.trimStart();
 
@@ -77,7 +92,7 @@ function rule(expectation, options) {
 			const trimmedArg = args.trim();
 			const isEmptyArgument = ['', "''", '""'].includes(trimmedArg);
 
-			if (optionsMatches(options, 'except', 'empty') && isEmptyArgument) {
+			if (optionsMatches(secondaryOptions, 'except', 'empty') && isEmptyArgument) {
 				shouldHasQuotes = !shouldHasQuotes;
 			}
 
@@ -96,6 +111,11 @@ function rule(expectation, options) {
 			}
 		}
 
+		/**
+		 * @param {string} message
+		 * @param {import('postcss').Node} node
+		 * @param {number} index
+		 */
 		function complain(message, node, index) {
 			report({
 				message,
@@ -106,8 +126,9 @@ function rule(expectation, options) {
 			});
 		}
 	};
-}
+};
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

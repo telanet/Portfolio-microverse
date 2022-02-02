@@ -1,8 +1,5 @@
-// @ts-nocheck
-
 'use strict';
 
-const _ = require('lodash');
 const declarationValueIndex = require('../../utils/declarationValueIndex');
 const getDeclarationValue = require('../../utils/getDeclarationValue');
 const isStandardSyntaxFunction = require('../../utils/isStandardSyntaxFunction');
@@ -13,6 +10,7 @@ const ruleMessages = require('../../utils/ruleMessages');
 const setDeclarationValue = require('../../utils/setDeclarationValue');
 const validateOptions = require('../../utils/validateOptions');
 const valueParser = require('postcss-value-parser');
+const { isRegExp, isString } = require('../../utils/validateTypes');
 
 const ruleName = 'function-name-case';
 
@@ -20,25 +18,30 @@ const messages = ruleMessages(ruleName, {
 	expected: (actual, expected) => `Expected "${actual}" to be "${expected}"`,
 });
 
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/function-name-case',
+};
+
 const mapLowercaseFunctionNamesToCamelCase = new Map();
 
-keywordSets.camelCaseFunctionNames.forEach((func) => {
+for (const func of keywordSets.camelCaseFunctionNames) {
 	mapLowercaseFunctionNamesToCamelCase.set(func.toLowerCase(), func);
-});
+}
 
-function rule(expectation, options, context) {
+/** @type {import('stylelint').Rule} */
+const rule = (primary, secondaryOptions, context) => {
 	return (root, result) => {
 		const validOptions = validateOptions(
 			result,
 			ruleName,
 			{
-				actual: expectation,
+				actual: primary,
 				possible: ['lower', 'upper'],
 			},
 			{
-				actual: options,
+				actual: secondaryOptions,
 				possible: {
-					ignoreFunctions: [_.isString, _.isRegExp],
+					ignoreFunctions: [isString, isRegExp],
 				},
 				optional: true,
 			},
@@ -60,7 +63,7 @@ function rule(expectation, options, context) {
 				const functionName = node.value;
 				const functionNameLowerCase = functionName.toLowerCase();
 
-				const ignoreFunctions = (options && options.ignoreFunctions) || [];
+				const ignoreFunctions = (secondaryOptions && secondaryOptions.ignoreFunctions) || [];
 
 				if (ignoreFunctions.length > 0 && matchesStringOrRegExp(functionName, ignoreFunctions)) {
 					return;
@@ -69,11 +72,11 @@ function rule(expectation, options, context) {
 				let expectedFunctionName = null;
 
 				if (
-					expectation === 'lower' &&
+					primary === 'lower' &&
 					mapLowercaseFunctionNamesToCamelCase.has(functionNameLowerCase)
 				) {
 					expectedFunctionName = mapLowercaseFunctionNamesToCamelCase.get(functionNameLowerCase);
-				} else if (expectation === 'lower') {
+				} else if (primary === 'lower') {
 					expectedFunctionName = functionNameLowerCase;
 				} else {
 					expectedFunctionName = functionName.toUpperCase();
@@ -104,8 +107,9 @@ function rule(expectation, options, context) {
 			}
 		});
 	};
-}
+};
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

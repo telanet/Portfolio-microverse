@@ -1,8 +1,5 @@
-// @ts-nocheck
-
 'use strict';
 
-const _ = require('lodash');
 const atRuleParamIndex = require('../../utils/atRuleParamIndex');
 const isCustomMediaQuery = require('../../utils/isCustomMediaQuery');
 const isRangeContextMediaFeature = require('../../utils/isRangeContextMediaFeature');
@@ -19,10 +16,15 @@ const messages = ruleMessages(ruleName, {
 	expected: (actual, expected) => `Expected "${actual}" to be "${expected}"`,
 });
 
-function rule(expectation, options, context) {
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/media-feature-name-case',
+};
+
+/** @type {import('stylelint').Rule} */
+const rule = (primary, _secondaryOptions, context) => {
 	return (root, result) => {
 		const validOptions = validateOptions(result, ruleName, {
-			actual: expectation,
+			actual: primary,
 			possible: ['lower', 'upper'],
 		});
 
@@ -31,7 +33,7 @@ function rule(expectation, options, context) {
 		}
 
 		root.walkAtRules(/^media$/i, (atRule) => {
-			let hasComments = _.get(atRule, 'raws.params.raw');
+			let hasComments = atRule.raws.params && atRule.raws.params.raw;
 			const mediaRule = hasComments ? hasComments : atRule.params;
 
 			mediaParser(mediaRule).walk(/^media-feature$/i, (mediaFeatureNode) => {
@@ -55,8 +57,7 @@ function rule(expectation, options, context) {
 					return;
 				}
 
-				const expectedFeatureName =
-					expectation === 'lower' ? value.toLowerCase() : value.toUpperCase();
+				const expectedFeatureName = primary === 'lower' ? value.toLowerCase() : value.toUpperCase();
 
 				if (value === expectedFeatureName) {
 					return;
@@ -68,7 +69,12 @@ function rule(expectation, options, context) {
 							hasComments.slice(0, sourceIndex) +
 							expectedFeatureName +
 							hasComments.slice(sourceIndex + expectedFeatureName.length);
-						_.set(atRule, 'raws.params.raw', hasComments);
+
+						if (atRule.raws.params == null) {
+							throw new Error('The `AtRuleRaws` node must have a `params` property');
+						}
+
+						atRule.raws.params.raw = hasComments;
 					} else {
 						atRule.params =
 							atRule.params.slice(0, sourceIndex) +
@@ -89,8 +95,9 @@ function rule(expectation, options, context) {
 			});
 		});
 	};
-}
+};
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

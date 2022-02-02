@@ -2,7 +2,6 @@
 
 'use strict';
 
-const _ = require('lodash');
 const isAutoprefixable = require('../../utils/isAutoprefixable');
 const isStandardSyntaxDeclaration = require('../../utils/isStandardSyntaxDeclaration');
 const isStandardSyntaxProperty = require('../../utils/isStandardSyntaxProperty');
@@ -12,12 +11,17 @@ const ruleMessages = require('../../utils/ruleMessages');
 const styleSearch = require('style-search');
 const validateOptions = require('../../utils/validateOptions');
 const vendor = require('../../utils/vendor');
+const { isString } = require('../../utils/validateTypes');
 
 const ruleName = 'value-no-vendor-prefix';
 
 const messages = ruleMessages(ruleName, {
 	rejected: (value) => `Unexpected vendor-prefix "${value}"`,
 });
+
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/value-no-vendor-prefix',
+};
 
 const valuePrefixes = ['-webkit-', '-moz-', '-ms-', '-o-'];
 
@@ -31,7 +35,7 @@ function rule(actual, options, context) {
 				optional: true,
 				actual: options,
 				possible: {
-					ignoreValues: [_.isString],
+					ignoreValues: [isString],
 				},
 			},
 		);
@@ -63,7 +67,7 @@ function rule(actual, options, context) {
 			styleSearch({ source: value.toLowerCase(), target: valuePrefixes }, (match) => {
 				const fullIdentifier = /^(-[a-z-]+)\b/i.exec(value.slice(match.startIndex))[1];
 
-				if (!isAutoprefixable.propertyValue(prop, fullIdentifier)) {
+				if (!isAutoprefixable.propertyValue(fullIdentifier)) {
 					return;
 				}
 
@@ -87,4 +91,5 @@ function rule(actual, options, context) {
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

@@ -2,7 +2,6 @@
 
 'use strict';
 
-const _ = require('lodash');
 const declarationValueIndex = require('../../utils/declarationValueIndex');
 const getDeclarationValue = require('../../utils/getDeclarationValue');
 const getUnitFromValueNode = require('../../utils/getUnitFromValueNode');
@@ -15,12 +14,17 @@ const report = require('../../utils/report');
 const ruleMessages = require('../../utils/ruleMessages');
 const validateOptions = require('../../utils/validateOptions');
 const valueParser = require('postcss-value-parser');
+const { isBoolean, isRegExp, isString } = require('../../utils/validateTypes');
 
 const ruleName = 'value-keyword-case';
 
 const messages = ruleMessages(ruleName, {
 	expected: (actual, expected) => `Expected "${actual}" to be "${expected}"`,
 });
+
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/value-keyword-case',
+};
 
 // Operators are interpreted as "words" by the value parser, so we want to make sure to ignore them.
 const ignoredCharacters = new Set(['+', '-', '/', '*', '%']);
@@ -29,9 +33,9 @@ const gridColumnProps = new Set(['grid-column', 'grid-column-start', 'grid-colum
 
 const mapLowercaseKeywordsToCamelCase = new Map();
 
-keywordSets.camelCaseKeywords.forEach((func) => {
+for (const func of keywordSets.camelCaseKeywords) {
 	mapLowercaseKeywordsToCamelCase.set(func.toLowerCase(), func);
-});
+}
 
 function rule(expectation, options, context) {
 	return (root, result) => {
@@ -45,9 +49,10 @@ function rule(expectation, options, context) {
 			{
 				actual: options,
 				possible: {
-					ignoreProperties: [_.isString, _.isRegExp],
-					ignoreKeywords: [_.isString, _.isRegExp],
-					ignoreFunctions: [_.isString, _.isRegExp],
+					ignoreProperties: [isString, isRegExp],
+					ignoreKeywords: [isString, isRegExp],
+					ignoreFunctions: [isString, isRegExp],
+					camelCaseSvgKeywords: [isBoolean],
 				},
 				optional: true,
 			},
@@ -196,7 +201,14 @@ function rule(expectation, options, context) {
 				const keywordLowerCase = keyword.toLocaleLowerCase();
 				let expectedKeyword = null;
 
-				if (expectation === 'lower' && mapLowercaseKeywordsToCamelCase.has(keywordLowerCase)) {
+				/** @type {boolean} */
+				const camelCaseSvgKeywords = (options && options.camelCaseSvgKeywords) || false;
+
+				if (
+					expectation === 'lower' &&
+					mapLowercaseKeywordsToCamelCase.has(keywordLowerCase) &&
+					camelCaseSvgKeywords
+				) {
 					expectedKeyword = mapLowercaseKeywordsToCamelCase.get(keywordLowerCase);
 				} else if (expectation === 'lower') {
 					expectedKeyword = keyword.toLowerCase();
@@ -233,4 +245,5 @@ function rule(expectation, options, context) {
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

@@ -18,6 +18,10 @@ const messages = ruleMessages(ruleName, {
 	rejected: 'Unexpected qualifying type selector',
 });
 
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/selector-no-qualifying-type',
+};
+
 const selectorCharacters = ['#', '.', '['];
 
 function isSelectorCharacters(value) {
@@ -89,7 +93,7 @@ function rule(enabled, options) {
 					const selectorNodes = getRightNodes(selector);
 					const index = selector.sourceIndex;
 
-					selectorNodes.forEach((selectorNode) => {
+					for (const selectorNode of selectorNodes) {
 						if (selectorNode.type === 'id' && !optionsMatches(options, 'ignore', 'id')) {
 							complain(index);
 						}
@@ -104,17 +108,17 @@ function rule(enabled, options) {
 						) {
 							complain(index);
 						}
-					});
+					}
 				});
 			}
 
-			resolvedNestedSelector(ruleNode.selector, ruleNode).forEach((resolvedSelector) => {
+			for (const resolvedSelector of resolvedNestedSelector(ruleNode.selector, ruleNode)) {
 				if (!isStandardSyntaxSelector(resolvedSelector)) {
-					return;
+					continue;
 				}
 
 				parseSelector(resolvedSelector, result, ruleNode, checkSelector);
-			});
+			}
 
 			function complain(index) {
 				report({
@@ -131,4 +135,5 @@ function rule(enabled, options) {
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

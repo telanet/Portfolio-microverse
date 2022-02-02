@@ -51,8 +51,6 @@ keywordSets.lengthUnits = new Set([
 
 keywordSets.units = uniteSets(keywordSets.nonLengthUnits, keywordSets.lengthUnits);
 
-keywordSets.colorFunctionNames = new Set(['rgb', 'rgba', 'hsl', 'hsla', 'hwb', 'gray']);
-
 keywordSets.camelCaseFunctionNames = new Set([
 	'translateX',
 	'translateY',
@@ -67,7 +65,7 @@ keywordSets.camelCaseFunctionNames = new Set([
 	'skewY',
 ]);
 
-keywordSets.basicKeywords = new Set(['initial', 'inherit', 'unset']);
+keywordSets.basicKeywords = new Set(['initial', 'inherit', 'revert', 'revert-layer', 'unset']);
 
 keywordSets.systemFontValues = uniteSets(keywordSets.basicKeywords, [
 	'caption',
@@ -180,6 +178,7 @@ keywordSets.levelThreeAndUpPseudoElements = new Set([
 keywordSets.shadowTreePseudoElements = new Set(['part']);
 
 keywordSets.vendorSpecificPseudoElements = new Set([
+	'-moz-focus-inner',
 	'-moz-progress-bar',
 	'-moz-range-progress',
 	'-moz-range-thumb',
@@ -582,6 +581,7 @@ keywordSets.mediaFeatureNames = uniteSets(keywordSets.deprecatedMediaFeatureName
 	'color',
 	'color-gamut',
 	'color-index',
+	'dynamic-range',
 	'forced-colors',
 	'grid',
 	'height',
@@ -608,12 +608,14 @@ keywordSets.mediaFeatureNames = uniteSets(keywordSets.deprecatedMediaFeatureName
 	'overflow-inline',
 	'pointer',
 	'prefers-color-scheme',
+	'prefers-contrast',
 	'prefers-reduced-motion',
 	'prefers-reduced-transparency',
 	'resolution',
 	'scan',
 	'scripting',
 	'update',
+	'video-dynamic-range',
 	'width',
 ]);
 
@@ -676,15 +678,47 @@ keywordSets.nonStandardHtmlTags = new Set([
 	'xmp',
 ]);
 
+// extracted from https://developer.mozilla.org/en-US/docs/Web/SVG/Element
+keywordSets.validMixedCaseSvgElements = new Set([
+	'animateMotion',
+	'animateTransform',
+	'clipPath',
+	'feBlend',
+	'feColorMatrix',
+	'feComponentTransfer',
+	'feComposite',
+	'feConvolveMatrix',
+	'feDiffuseLighting',
+	'feDisplacementMap',
+	'feDistantLight',
+	'feDropShadow',
+	'feFlood',
+	'feFuncA',
+	'feFuncB',
+	'feFuncG',
+	'feFuncR',
+	'feGaussianBlur',
+	'feImage',
+	'feMerge',
+	'feMergeNode',
+	'feMorphology',
+	'feOffset',
+	'fePointLight',
+	'feSpecularLighting',
+	'feSpotLight',
+	'feTile',
+	'feTurbulence',
+	'foreignObject',
+	'linearGradient',
+	'radialGradient',
+	'textPath',
+]);
+
 /**
  * @param {(string[] | Set<string>)[]} args
  */
 function uniteSets(...args) {
-	return new Set(
-		[...args].reduce((/** @type {string[]} */ result, set) => {
-			return result.concat([...set]);
-		}, []),
-	);
+	return new Set([...args].reduce((result, set) => [...result, ...set], []));
 }
 
 module.exports = keywordSets;

@@ -2,7 +2,6 @@
 
 'use strict';
 
-const _ = require('lodash');
 const htmlTags = require('html-tags');
 const isCustomElement = require('../../utils/isCustomElement');
 const isKeyframeSelector = require('../../utils/isKeyframeSelector');
@@ -16,12 +15,17 @@ const report = require('../../utils/report');
 const ruleMessages = require('../../utils/ruleMessages');
 const svgTags = require('svg-tags');
 const validateOptions = require('../../utils/validateOptions');
+const { isRegExp, isString } = require('../../utils/validateTypes');
 
 const ruleName = 'selector-type-no-unknown';
 
 const messages = ruleMessages(ruleName, {
 	rejected: (selector) => `Unexpected unknown type selector "${selector}"`,
 });
+
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/selector-type-no-unknown',
+};
 
 function rule(actual, options) {
 	return (root, result) => {
@@ -33,8 +37,8 @@ function rule(actual, options) {
 				actual: options,
 				possible: {
 					ignore: ['custom-elements', 'default-namespace'],
-					ignoreNamespaces: [_.isString, _.isRegExp],
-					ignoreTypes: [_.isString, _.isRegExp],
+					ignoreNamespaces: [isString, isRegExp],
+					ignoreTypes: [isString, isRegExp],
 				},
 				optional: true,
 			},
@@ -112,4 +116,5 @@ function rule(actual, options) {
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

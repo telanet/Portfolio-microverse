@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 'use strict';
 
 const declarationValueIndex = require('../../utils/declarationValueIndex');
@@ -15,9 +13,14 @@ const messages = ruleMessages(ruleName, {
 	rejected: (animationName) => `Unexpected unknown animation name "${animationName}"`,
 });
 
-function rule(actual) {
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/no-unknown-animations',
+};
+
+/** @type {import('stylelint').Rule} */
+const rule = (primary) => {
 	return (root, result) => {
-		const validOptions = validateOptions(result, ruleName, { actual });
+		const validOptions = validateOptions(result, ruleName, { actual: primary });
 
 		if (!validOptions) {
 			return;
@@ -37,13 +40,13 @@ function rule(actual) {
 					return;
 				}
 
-				animationNames.forEach((animationNameNode) => {
+				for (const animationNameNode of animationNames) {
 					if (keywordSets.animationNameKeywords.has(animationNameNode.value.toLowerCase())) {
-						return;
+						continue;
 					}
 
 					if (declaredAnimations.has(animationNameNode.value)) {
-						return;
+						continue;
 					}
 
 					report({
@@ -53,12 +56,13 @@ function rule(actual) {
 						node: decl,
 						index: declarationValueIndex(decl) + animationNameNode.sourceIndex,
 					});
-				});
+				}
 			}
 		});
 	};
-}
+};
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

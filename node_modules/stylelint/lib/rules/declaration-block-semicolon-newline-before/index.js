@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 'use strict';
 
 const blockString = require('../../utils/blockString');
@@ -7,6 +5,7 @@ const report = require('../../utils/report');
 const ruleMessages = require('../../utils/ruleMessages');
 const validateOptions = require('../../utils/validateOptions');
 const whitespaceChecker = require('../../utils/whitespaceChecker');
+const { isAtRule, isRule } = require('../../utils/typeGuards');
 
 const ruleName = 'declaration-block-semicolon-newline-before';
 
@@ -17,12 +16,17 @@ const messages = ruleMessages(ruleName, {
 		'Unexpected whitespace before ";" in a multi-line declaration block',
 });
 
-function rule(expectation) {
-	const checker = whitespaceChecker('newline', expectation, messages);
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/declaration-block-semicolon-newline-before',
+};
+
+/** @type {import('stylelint').Rule} */
+const rule = (primary) => {
+	const checker = whitespaceChecker('newline', primary, messages);
 
 	return function (root, result) {
 		const validOptions = validateOptions(result, ruleName, {
-			actual: expectation,
+			actual: primary,
 			possible: ['always', 'always-multi-line', 'never-multi-line'],
 		});
 
@@ -32,6 +36,12 @@ function rule(expectation) {
 
 		root.walkDecls((decl) => {
 			const parentRule = decl.parent;
+
+			if (!parentRule) throw new Error('A parent node must be present');
+
+			if (!isAtRule(parentRule) && !isRule(parentRule)) {
+				return;
+			}
 
 			if (!parentRule.raws.semicolon && parentRule.last === decl) {
 				return;
@@ -55,8 +65,9 @@ function rule(expectation) {
 			});
 		});
 	};
-}
+};
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

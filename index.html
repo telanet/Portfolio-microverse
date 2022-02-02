@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-RP1ZZGYXMD"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){window.dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-RP1ZZGYXMD');
+</script>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,19 +23,24 @@
     <title>Benard Ngetich Portfolio</title>
 </head>
 <body>
-<header>    
-    <nav class="nav-bar" >
-        <div class="link link-icon logo"><a>Benard Ngetich </a> </div>
-        <ul class="menu-list ul-list horizontal-list">
-            <li class="list-item-text"><a href="#" class="link link-text">Portfolio</a></li>
-            <li class="list-item-text"><a href="#" class="link link-text">About</a></li>
-            <li class="list-item-text"><a href="#" class="link link-text">Contact</a></li>
-            <li class="list-item-text"><a href="#" class="link link-text fas fa-envelope"></a></li>
-         </ul>
-        <div class="hamburger-menu" id="hamburger-menu"><i class="fas fa-bars"></i>
-      </div>
-    </nav>
-</header>
+ 
+<nav>
+  <div class="navbar">
+    <div class="logo"><a href="#">Benard Ngetich</a></div>
+    <ul class="menu">
+      <li><a href="#" class="link link-text">Portfolio</a></li>
+      <li><a href="#" class="link link-text">About</a></li>
+      <li><a href="#" class="link link-text">Contact</a></li>
+      <li><a href="#" class="link link-text fas fa-envelope"></a></li>
+        <li></li> class="cancel-btn">
+          <i class="fas fa-times"></i>
+        </li>
+    </ul>  
+  </div>
+  <div class="menu-btn">
+    <i class="fas fa-bars"></i>
+  </div>
+</nav>
     <section class="page-section first-section">
     <h1 class="section-title title-l1">
         Hey There. <br>I'm Ben
@@ -241,5 +254,6 @@
     </section>
     <hr class="h-rule">
     </footer>
+    <script src="script.js"></script>
 </body>
 </html>

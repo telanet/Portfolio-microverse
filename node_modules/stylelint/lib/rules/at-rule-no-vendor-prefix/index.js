@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 'use strict';
 
 const isAutoprefixable = require('../../utils/isAutoprefixable');
@@ -14,9 +12,14 @@ const messages = ruleMessages(ruleName, {
 	rejected: (p) => `Unexpected vendor-prefixed at-rule "@${p}"`,
 });
 
-function rule(actual, options, context) {
-	return function (root, result) {
-		const validOptions = validateOptions(result, ruleName, { actual });
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/at-rule-no-vendor-prefix',
+};
+
+/** @type {import('stylelint').Rule} */
+const rule = (primary, _secondary, context) => {
+	return (root, result) => {
+		const validOptions = validateOptions(result, ruleName, { actual: primary });
 
 		if (!validOptions) {
 			return;
@@ -51,8 +54,9 @@ function rule(actual, options, context) {
 			});
 		});
 	};
-}
+};
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

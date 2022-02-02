@@ -1,8 +1,5 @@
-// @ts-nocheck
-
 'use strict';
 
-const _ = require('lodash');
 const isStandardSyntaxRule = require('../../utils/isStandardSyntaxRule');
 const isStandardSyntaxSelector = require('../../utils/isStandardSyntaxSelector');
 const keywordSets = require('../../reference/keywordSets');
@@ -13,6 +10,7 @@ const resolvedNestedSelector = require('postcss-resolve-nested-selector');
 const ruleMessages = require('../../utils/ruleMessages');
 const specificity = require('specificity');
 const validateOptions = require('../../utils/validateOptions');
+const { isRegExp, isString } = require('../../utils/validateTypes');
 
 const ruleName = 'selector-max-specificity';
 
@@ -20,38 +18,53 @@ const messages = ruleMessages(ruleName, {
 	expected: (selector, max) => `Expected "${selector}" to have a specificity no more than "${max}"`,
 });
 
-// Return an array representation of zero specificity. We need a new array each time so that it can mutated
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/selector-max-specificity',
+};
+
+/** @typedef {import('specificity').SpecificityArray} SpecificityArray */
+
+/**
+ * Return an array representation of zero specificity. We need a new array each time so that it can mutated.
+ *
+ * @returns {SpecificityArray}
+ */
 const zeroSpecificity = () => [0, 0, 0, 0];
 
-// Calculate the sum of given array of specificity arrays
+/**
+ * Calculate the sum of given array of specificity arrays.
+ *
+ * @param {SpecificityArray[]} specificities
+ */
 const specificitySum = (specificities) => {
 	const sum = zeroSpecificity();
 
-	specificities.forEach((specificityArray) => {
-		specificityArray.forEach((value, i) => {
+	for (const specificityArray of specificities) {
+		for (const [i, value] of specificityArray.entries()) {
 			sum[i] += value;
-		});
-	});
+		}
+	}
 
 	return sum;
 };
 
-function rule(max, options) {
+/** @type {import('stylelint').Rule} */
+const rule = (primary, secondaryOptions) => {
 	return (root, result) => {
 		const validOptions = validateOptions(
 			result,
 			ruleName,
 			{
-				actual: max,
+				actual: primary,
 				possible: [
 					// Check that the max specificity is in the form "a,b,c"
-					(spec) => /^\d+,\d+,\d+$/.test(spec),
+					(spec) => isString(spec) && /^\d+,\d+,\d+$/.test(spec),
 				],
 			},
 			{
-				actual: options,
+				actual: secondaryOptions,
 				possible: {
-					ignoreSelectors: [_.isString, _.isRegExp],
+					ignoreSelectors: [isString, isRegExp],
 				},
 				optional: true,
 			},
@@ -61,16 +74,26 @@ function rule(max, options) {
 			return;
 		}
 
-		// Calculate the specificity of a simple selector (type, attribute, class, ID, or pseudos's own value)
+		/**
+		 * Calculate the specificity of a simple selector (type, attribute, class, ID, or pseudos's own value).
+		 *
+		 * @param {string} selector
+		 * @returns {SpecificityArray}
+		 */
 		const simpleSpecificity = (selector) => {
-			if (optionsMatches(options, 'ignoreSelectors', selector)) {
+			if (optionsMatches(secondaryOptions, 'ignoreSelectors', selector)) {
 				return zeroSpecificity();
 			}
 
 			return specificity.calculate(selector)[0].specificityArray;
 		};
 
-		// Calculate the the specificity of the most specific direct child
+		/**
+		 * Calculate the the specificity of the most specific direct child.
+		 *
+		 * @param {import('postcss-selector-parser').Container<unknown>} node
+		 * @returns {SpecificityArray}
+		 */
 		const maxChildSpecificity = (node) =>
 			node.reduce((maxSpec, child) => {
 				const childSpecificity = nodeSpecificity(child); // eslint-disable-line no-use-before-define
@@ -78,7 +101,12 @@ function rule(max, options) {
 				return specificity.compare(childSpecificity, maxSpec) === 1 ? childSpecificity : maxSpec;
 			}, zeroSpecificity());
 
-		// Calculate the specificity of a pseudo selector including own value and children
+		/**
+		 * Calculate the specificity of a pseudo selector including own value and children.
+		 *
+		 * @param {import('postcss-selector-parser').Pseudo} node
+		 * @returns {SpecificityArray}
+		 */
 		const pseudoSpecificity = (node) => {
 			// `node.toString()` includes children which should be processed separately,
 			// so use `node.value` instead
@@ -92,12 +120,16 @@ function rule(max, options) {
 			return specificitySum([ownSpecificity, maxChildSpecificity(node)]);
 		};
 
+		/**
+		 * @param {import('postcss-selector-parser').Node} node
+		 * @returns {boolean}
+		 */
 		const shouldSkipPseudoClassArgument = (node) => {
 			// postcss-selector-parser includes the arguments to nth-child() functions
 			// as "tags", so we need to ignore them ourselves.
 			// The fake-tag's "parent" is actually a selector node, whose parent
 			// should be the :nth-child pseudo node.
-			const parentNode = node.parent.parent;
+			const parentNode = node.parent && node.parent.parent;
 
 			if (parentNode && parentNode.value) {
 				const parentNodeValue = parentNode.value;
@@ -113,7 +145,12 @@ function rule(max, options) {
 			return false;
 		};
 
-		// Calculate the specificity of a node parsed by `postcss-selector-parser`
+		/**
+		 * Calculate the specificity of a node parsed by `postcss-selector-parser`.
+		 *
+		 * @param {import('postcss-selector-parser').Node} node
+		 * @returns {SpecificityArray}
+		 */
 		const nodeSpecificity = (node) => {
 			if (shouldSkipPseudoClassArgument(node)) {
 				return zeroSpecificity();
@@ -129,13 +166,19 @@ function rule(max, options) {
 					return pseudoSpecificity(node);
 				case 'selector':
 					// Calculate the sum of all the direct children
-					return specificitySum(node.map(nodeSpecificity));
+					return specificitySum(node.map((n) => nodeSpecificity(n)));
 				default:
 					return zeroSpecificity();
 			}
 		};
 
-		const maxSpecificityArray = `0,${max}`.split(',').map(parseFloat);
+		/** @type {[number, number, number]} */
+		const primaryNumbers = primary
+			.split(',')
+			.map((/** @type {string} */ s) => Number.parseFloat(s));
+
+		/** @type {SpecificityArray} */
+		const maxSpecificityArray = [0, ...primaryNumbers];
 
 		root.walkRules((ruleNode) => {
 			if (!isStandardSyntaxRule(ruleNode)) {
@@ -143,12 +186,12 @@ function rule(max, options) {
 			}
 
 			// Using `.selectors` gets us each selector in the eventuality we have a comma separated set
-			ruleNode.selectors.forEach((selector) => {
-				resolvedNestedSelector(selector, ruleNode).forEach((resolvedSelector) => {
+			for (const selector of ruleNode.selectors) {
+				for (const resolvedSelector of resolvedNestedSelector(selector, ruleNode)) {
 					try {
 						// Skip non-standard syntax selectors
 						if (!isStandardSyntaxSelector(resolvedSelector)) {
-							return;
+							continue;
 						}
 
 						parseSelector(resolvedSelector, result, ruleNode, (selectorTree) => {
@@ -160,7 +203,7 @@ function rule(max, options) {
 									ruleName,
 									result,
 									node: ruleNode,
-									message: messages.expected(resolvedSelector, max),
+									message: messages.expected(resolvedSelector, primary),
 									word: selector,
 								});
 							}
@@ -171,12 +214,13 @@ function rule(max, options) {
 							stylelintType: 'parseError',
 						});
 					}
-				});
-			});
+				}
+			}
 		});
 	};
-}
+};
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

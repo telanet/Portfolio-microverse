@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 'use strict';
 
 const report = require('../../utils/report');
@@ -12,9 +10,14 @@ const messages = ruleMessages(ruleName, {
 	rejected: 'Unexpected double-slash CSS comment',
 });
 
-function rule(actual) {
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/no-invalid-double-slash-comments',
+};
+
+/** @type {import('stylelint').Rule} */
+const rule = (primary) => {
 	return (root, result) => {
-		const validOptions = validateOptions(result, ruleName, { actual });
+		const validOptions = validateOptions(result, ruleName, { actual: primary });
 
 		if (!validOptions) {
 			return;
@@ -32,7 +35,7 @@ function rule(actual) {
 		});
 
 		root.walkRules((ruleNode) => {
-			ruleNode.selectors.forEach((selector) => {
+			for (const selector of ruleNode.selectors) {
 				if (selector.startsWith('//')) {
 					report({
 						message: messages.rejected,
@@ -41,11 +44,12 @@ function rule(actual) {
 						ruleName,
 					});
 				}
-			});
+			}
 		});
 	};
-}
+};
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

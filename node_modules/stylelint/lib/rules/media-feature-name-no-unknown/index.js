@@ -1,8 +1,5 @@
-// @ts-nocheck
-
 'use strict';
 
-const _ = require('lodash');
 const atRuleParamIndex = require('../../utils/atRuleParamIndex');
 const isCustomMediaQuery = require('../../utils/isCustomMediaQuery');
 const isRangeContextMediaFeature = require('../../utils/isRangeContextMediaFeature');
@@ -15,6 +12,7 @@ const report = require('../../utils/report');
 const ruleMessages = require('../../utils/ruleMessages');
 const validateOptions = require('../../utils/validateOptions');
 const vendor = require('../../utils/vendor');
+const { isRegExp, isString } = require('../../utils/validateTypes');
 
 const ruleName = 'media-feature-name-no-unknown';
 
@@ -22,16 +20,21 @@ const messages = ruleMessages(ruleName, {
 	rejected: (mediaFeatureName) => `Unexpected unknown media feature name "${mediaFeatureName}"`,
 });
 
-function rule(actual, options) {
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/media-feature-name-no-unknown',
+};
+
+/** @type {import('stylelint').Rule} */
+const rule = (primary, secondaryOptions) => {
 	return (root, result) => {
 		const validOptions = validateOptions(
 			result,
 			ruleName,
-			{ actual },
+			{ actual: primary },
 			{
-				actual: options,
+				actual: secondaryOptions,
 				possible: {
-					ignoreMediaFeatureNames: [_.isString, _.isRegExp],
+					ignoreMediaFeatureNames: [isString, isRegExp],
 				},
 				optional: true,
 			},
@@ -63,7 +66,7 @@ function rule(actual, options) {
 					return;
 				}
 
-				if (optionsMatches(options, 'ignoreMediaFeatureNames', value)) {
+				if (optionsMatches(secondaryOptions, 'ignoreMediaFeatureNames', value)) {
 					return;
 				}
 
@@ -81,8 +84,9 @@ function rule(actual, options) {
 			});
 		});
 	};
-}
+};
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

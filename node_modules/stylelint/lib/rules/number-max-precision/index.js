@@ -1,6 +1,6 @@
-// @ts-nocheck
-
 'use strict';
+
+const valueParser = require('postcss-value-parser');
 
 const atRuleParamIndex = require('../../utils/atRuleParamIndex');
 const declarationValueIndex = require('../../utils/declarationValueIndex');
@@ -9,9 +9,7 @@ const optionsMatches = require('../../utils/optionsMatches');
 const report = require('../../utils/report');
 const ruleMessages = require('../../utils/ruleMessages');
 const validateOptions = require('../../utils/validateOptions');
-
-const _ = require('lodash');
-const valueParser = require('postcss-value-parser');
+const { isNumber, isRegExp, isString } = require('../../utils/validateTypes');
 
 const ruleName = 'number-max-precision';
 
@@ -19,20 +17,26 @@ const messages = ruleMessages(ruleName, {
 	expected: (number, precision) => `Expected "${number}" to be "${number.toFixed(precision)}"`,
 });
 
-function rule(precision, options) {
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/number-max-precision',
+};
+
+/** @type {import('stylelint').Rule} */
+const rule = (primary, secondaryOptions) => {
 	return (root, result) => {
 		const validOptions = validateOptions(
 			result,
 			ruleName,
 			{
-				actual: precision,
-				possible: [_.isNumber],
+				actual: primary,
+				possible: [isNumber],
 			},
 			{
 				optional: true,
-				actual: options,
+				actual: secondaryOptions,
 				possible: {
-					ignoreUnits: [_.isString, _.isRegExp],
+					ignoreProperties: [isString, isRegExp],
+					ignoreUnits: [isString, isRegExp],
 				},
 			},
 		);
@@ -46,21 +50,31 @@ function rule(precision, options) {
 				return;
 			}
 
-			check(atRule, atRule.params, atRuleParamIndex);
+			check(atRule, atRule.params);
 		});
 
-		root.walkDecls((decl) => check(decl, decl.value, declarationValueIndex));
+		root.walkDecls((decl) => check(decl, decl.value));
 
-		function check(node, value, getIndex) {
+		/**
+		 * @param {import('postcss').AtRule | import('postcss').Declaration} node
+		 * @param {string} value
+		 */
+		function check(node, value) {
 			// Get out quickly if there are no periods
 			if (!value.includes('.')) {
+				return;
+			}
+
+			const prop = 'prop' in node ? node.prop : undefined;
+
+			if (optionsMatches(secondaryOptions, 'ignoreProperties', prop)) {
 				return;
 			}
 
 			valueParser(value).walk((valueNode) => {
 				const unit = getUnitFromValueNode(valueNode);
 
-				if (optionsMatches(options, 'ignoreUnits', unit)) {
+				if (optionsMatches(secondaryOptions, 'ignoreUnits', unit)) {
 					return;
 				}
 
@@ -80,22 +94,26 @@ function rule(precision, options) {
 					return;
 				}
 
-				if (match[1].length <= precision) {
+				if (match[1].length <= primary) {
 					return;
 				}
+
+				const baseIndex =
+					node.type === 'atrule' ? atRuleParamIndex(node) : declarationValueIndex(node);
 
 				report({
 					result,
 					ruleName,
 					node,
-					index: getIndex(node) + valueNode.sourceIndex + match.index,
-					message: messages.expected(Number.parseFloat(match[0]), precision),
+					index: baseIndex + valueNode.sourceIndex + match.index,
+					message: messages.expected(Number.parseFloat(match[0]), primary),
 				});
 			});
 		}
 	};
-}
+};
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

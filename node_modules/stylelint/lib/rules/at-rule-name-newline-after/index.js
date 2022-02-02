@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 'use strict';
 
 const atRuleNameSpaceChecker = require('../atRuleNameSpaceChecker');
@@ -13,12 +11,17 @@ const messages = ruleMessages(ruleName, {
 	expectedAfter: (name) => `Expected newline after at-rule name "${name}"`,
 });
 
-function rule(expectation) {
-	const checker = whitespaceChecker('newline', expectation, messages);
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/at-rule-name-newline-after',
+};
+
+/** @type {import('stylelint').Rule} */
+const rule = (primary) => {
+	const checker = whitespaceChecker('newline', primary, messages);
 
 	return (root, result) => {
 		const validOptions = validateOptions(result, ruleName, {
-			actual: expectation,
+			actual: primary,
 			possible: ['always', 'always-multi-line'],
 		});
 
@@ -33,8 +36,9 @@ function rule(expectation) {
 			checkedRuleName: ruleName,
 		});
 	};
-}
+};
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

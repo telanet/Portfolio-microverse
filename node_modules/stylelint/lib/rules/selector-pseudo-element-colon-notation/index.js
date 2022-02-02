@@ -15,6 +15,10 @@ const messages = ruleMessages(ruleName, {
 	expected: (q) => `Expected ${q} colon pseudo-element notation`,
 });
 
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/selector-pseudo-element-colon-notation',
+};
+
 function rule(expectation, options, context) {
 	return (root, result) => {
 		const validOptions = validateOptions(result, ruleName, {
@@ -78,12 +82,12 @@ function rule(expectation, options, context) {
 				const offset = expectedSingle ? 1 : 0;
 				const extraColon = expectedSingle ? '' : ':';
 
-				fixPositions.forEach((fixPosition) => {
+				for (const fixPosition of fixPositions) {
 					ruleNode.selector =
 						ruleNode.selector.substring(0, fixPosition.startIndex - offset) +
 						extraColon +
 						ruleNode.selector.substring(fixPosition.startIndex);
-				});
+				}
 			}
 		});
 	};
@@ -91,4 +95,5 @@ function rule(expectation, options, context) {
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

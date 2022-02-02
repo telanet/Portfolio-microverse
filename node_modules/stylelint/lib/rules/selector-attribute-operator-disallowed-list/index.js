@@ -1,13 +1,11 @@
-// @ts-nocheck
-
 'use strict';
 
-const _ = require('lodash');
 const isStandardSyntaxRule = require('../../utils/isStandardSyntaxRule');
 const parseSelector = require('../../utils/parseSelector');
 const report = require('../../utils/report');
 const ruleMessages = require('../../utils/ruleMessages');
 const validateOptions = require('../../utils/validateOptions');
+const { isString } = require('../../utils/validateTypes');
 
 const ruleName = 'selector-attribute-operator-disallowed-list';
 
@@ -15,13 +13,18 @@ const messages = ruleMessages(ruleName, {
 	rejected: (operator) => `Unexpected operator "${operator}"`,
 });
 
-function rule(listInput) {
-	const list = [].concat(listInput);
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/selector-attribute-operator-disallowed-list',
+};
+
+/** @type {import('stylelint').Rule} */
+const rule = (primary) => {
+	const list = [primary].flat();
 
 	return (root, result) => {
 		const validOptions = validateOptions(result, ruleName, {
 			actual: list,
-			possible: [_.isString],
+			possible: [isString],
 		});
 
 		if (!validOptions) {
@@ -56,10 +59,11 @@ function rule(listInput) {
 			});
 		});
 	};
-}
+};
 
 rule.primaryOptionArray = true;
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

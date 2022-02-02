@@ -1,8 +1,5 @@
-// @ts-nocheck
-
 'use strict';
 
-const _ = require('lodash');
 const isCustomProperty = require('../../utils/isCustomProperty');
 const isStandardSyntaxProperty = require('../../utils/isStandardSyntaxProperty');
 const matchesStringOrRegExp = require('../../utils/matchesStringOrRegExp');
@@ -10,6 +7,7 @@ const report = require('../../utils/report');
 const ruleMessages = require('../../utils/ruleMessages');
 const validateOptions = require('../../utils/validateOptions');
 const vendor = require('../../utils/vendor');
+const { isRegExp, isString } = require('../../utils/validateTypes');
 
 const ruleName = 'property-allowed-list';
 
@@ -17,11 +15,16 @@ const messages = ruleMessages(ruleName, {
 	rejected: (property) => `Unexpected property "${property}"`,
 });
 
-function rule(list) {
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/property-allowed-list',
+};
+
+/** @type {import('stylelint').Rule} */
+const rule = (primary) => {
 	return (root, result) => {
 		const validOptions = validateOptions(result, ruleName, {
-			actual: list,
-			possible: [_.isString, _.isRegExp],
+			actual: primary,
+			possible: [isString, isRegExp],
 		});
 
 		if (!validOptions) {
@@ -39,7 +42,7 @@ function rule(list) {
 				return;
 			}
 
-			if (matchesStringOrRegExp(vendor.unprefixed(prop), list)) {
+			if (matchesStringOrRegExp(vendor.unprefixed(prop), primary)) {
 				return;
 			}
 
@@ -51,10 +54,11 @@ function rule(list) {
 			});
 		});
 	};
-}
+};
 
 rule.primaryOptionArray = true;
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;
