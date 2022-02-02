@@ -18,6 +18,10 @@ const messages = ruleMessages(ruleName, {
 	rejectedAfterMultiLine: () => 'Unexpected whitespace after "," in a multi-line list',
 });
 
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/value-list-comma-newline-after',
+};
+
 function rule(expectation, options, context) {
 	const checker = whitespaceChecker('newline', expectation, messages);
 
@@ -72,29 +76,27 @@ function rule(expectation, options, context) {
 		});
 
 		if (fixData) {
-			fixData.forEach((commaIndices, decl) => {
-				commaIndices
-					.sort((a, b) => a - b)
-					.reverse()
-					.forEach((index) => {
-						const value = getDeclarationValue(decl);
-						const valueIndex = index - declarationValueIndex(decl);
-						const beforeValue = value.slice(0, valueIndex + 1);
-						let afterValue = value.slice(valueIndex + 1);
+			for (const [decl, commaIndices] of fixData.entries()) {
+				for (const index of commaIndices.sort((a, b) => a - b).reverse()) {
+					const value = getDeclarationValue(decl);
+					const valueIndex = index - declarationValueIndex(decl);
+					const beforeValue = value.slice(0, valueIndex + 1);
+					let afterValue = value.slice(valueIndex + 1);
 
-						if (expectation.startsWith('always')) {
-							afterValue = context.newline + afterValue;
-						} else if (expectation.startsWith('never-multi-line')) {
-							afterValue = afterValue.replace(/^\s*/, '');
-						}
+					if (expectation.startsWith('always')) {
+						afterValue = context.newline + afterValue;
+					} else if (expectation.startsWith('never-multi-line')) {
+						afterValue = afterValue.replace(/^\s*/, '');
+					}
 
-						setDeclarationValue(decl, beforeValue + afterValue);
-					});
-			});
+					setDeclarationValue(decl, beforeValue + afterValue);
+				}
+			}
 		}
 	};
 }
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

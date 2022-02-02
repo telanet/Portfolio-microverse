@@ -19,6 +19,10 @@ const messages = ruleMessages(ruleName, {
 	rejectedBeforeSingleLine: () => 'Unexpected whitespace before "," in a single-line list',
 });
 
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/value-list-comma-space-before',
+};
+
 function rule(expectation, options, context) {
 	const checker = whitespaceChecker('space', expectation, messages);
 
@@ -59,28 +63,27 @@ function rule(expectation, options, context) {
 		});
 
 		if (fixData) {
-			fixData.forEach((commaIndices, decl) => {
-				commaIndices
-					.sort((a, b) => b - a)
-					.forEach((index) => {
-						const value = getDeclarationValue(decl);
-						const valueIndex = index - declarationValueIndex(decl);
-						let beforeValue = value.slice(0, valueIndex);
-						const afterValue = value.slice(valueIndex);
+			for (const [decl, commaIndices] of fixData.entries()) {
+				for (const index of commaIndices.sort((a, b) => b - a)) {
+					const value = getDeclarationValue(decl);
+					const valueIndex = index - declarationValueIndex(decl);
+					let beforeValue = value.slice(0, valueIndex);
+					const afterValue = value.slice(valueIndex);
 
-						if (expectation.startsWith('always')) {
-							beforeValue = beforeValue.replace(/\s*$/, ' ');
-						} else if (expectation.startsWith('never')) {
-							beforeValue = beforeValue.replace(/\s*$/, '');
-						}
+					if (expectation.startsWith('always')) {
+						beforeValue = beforeValue.replace(/\s*$/, ' ');
+					} else if (expectation.startsWith('never')) {
+						beforeValue = beforeValue.replace(/\s*$/, '');
+					}
 
-						setDeclarationValue(decl, beforeValue + afterValue);
-					});
-			});
+					setDeclarationValue(decl, beforeValue + afterValue);
+				}
+			}
 		}
 	};
 }
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

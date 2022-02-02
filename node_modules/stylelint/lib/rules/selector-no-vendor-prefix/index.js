@@ -2,7 +2,6 @@
 
 'use strict';
 
-const _ = require('lodash');
 const isAutoprefixable = require('../../utils/isAutoprefixable');
 const isStandardSyntaxRule = require('../../utils/isStandardSyntaxRule');
 const optionsMatches = require('../../utils/optionsMatches');
@@ -10,12 +9,17 @@ const parseSelector = require('../../utils/parseSelector');
 const report = require('../../utils/report');
 const ruleMessages = require('../../utils/ruleMessages');
 const validateOptions = require('../../utils/validateOptions');
+const { isString } = require('../../utils/validateTypes');
 
 const ruleName = 'selector-no-vendor-prefix';
 
 const messages = ruleMessages(ruleName, {
 	rejected: (selector) => `Unexpected vendor-prefix "${selector}"`,
 });
+
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/selector-no-vendor-prefix',
+};
 
 function rule(actual, options, context) {
 	return (root, result) => {
@@ -26,7 +30,7 @@ function rule(actual, options, context) {
 			{
 				actual: options,
 				possible: {
-					ignoreSelectors: [_.isString],
+					ignoreSelectors: [isString],
 				},
 				optional: true,
 			},
@@ -72,4 +76,5 @@ function rule(actual, options, context) {
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

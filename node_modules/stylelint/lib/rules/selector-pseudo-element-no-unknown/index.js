@@ -2,7 +2,6 @@
 
 'use strict';
 
-const _ = require('lodash');
 const isStandardSyntaxRule = require('../../utils/isStandardSyntaxRule');
 const isStandardSyntaxSelector = require('../../utils/isStandardSyntaxSelector');
 const keywordSets = require('../../reference/keywordSets');
@@ -12,12 +11,17 @@ const report = require('../../utils/report');
 const ruleMessages = require('../../utils/ruleMessages');
 const validateOptions = require('../../utils/validateOptions');
 const vendor = require('../../utils/vendor');
+const { isString } = require('../../utils/validateTypes');
 
 const ruleName = 'selector-pseudo-element-no-unknown';
 
 const messages = ruleMessages(ruleName, {
 	rejected: (selector) => `Unexpected unknown pseudo-element selector "${selector}"`,
 });
+
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/selector-pseudo-element-no-unknown',
+};
 
 function rule(actual, options) {
 	return (root, result) => {
@@ -28,7 +32,7 @@ function rule(actual, options) {
 			{
 				actual: options,
 				possible: {
-					ignorePseudoElements: [_.isString],
+					ignorePseudoElements: [isString],
 				},
 				optional: true,
 			},
@@ -89,4 +93,5 @@ function rule(actual, options) {
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

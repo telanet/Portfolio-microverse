@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 'use strict';
 
 const isNonNegativeInteger = require('../../utils/isNonNegativeInteger');
@@ -20,10 +18,15 @@ const messages = ruleMessages(ruleName, {
 		}`,
 });
 
-function rule(max) {
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/selector-max-universal',
+};
+
+/** @type {import('stylelint').Rule} */
+const rule = (primary) => {
 	return (root, result) => {
 		const validOptions = validateOptions(result, ruleName, {
-			actual: max,
+			actual: primary,
 			possible: isNonNegativeInteger,
 		});
 
@@ -31,6 +34,10 @@ function rule(max) {
 			return;
 		}
 
+		/**
+		 * @param {import('postcss-selector-parser').Container<unknown>} selectorNode
+		 * @param {import('postcss').Rule} ruleNode
+		 */
 		function checkSelector(selectorNode, ruleNode) {
 			const count = selectorNode.reduce((total, childNode) => {
 				// Only traverse inside actual selectors
@@ -39,16 +46,20 @@ function rule(max) {
 					checkSelector(childNode, ruleNode);
 				}
 
-				return (total += childNode.type === 'universal' ? 1 : 0);
+				if (childNode.type === 'universal') total += 1;
+
+				return total;
 			}, 0);
 
-			if (selectorNode.type !== 'root' && selectorNode.type !== 'pseudo' && count > max) {
+			if (selectorNode.type !== 'root' && selectorNode.type !== 'pseudo' && count > primary) {
+				const selector = selectorNode.toString();
+
 				report({
 					ruleName,
 					result,
 					node: ruleNode,
-					message: messages.expected(selectorNode, max),
-					word: selectorNode,
+					message: messages.expected(selector, primary),
+					word: selector,
 				});
 			}
 		}
@@ -58,6 +69,7 @@ function rule(max) {
 				return;
 			}
 
+			/** @type {string[]} */
 			const selectors = [];
 
 			selectorParser()
@@ -68,17 +80,18 @@ function rule(max) {
 					}
 				});
 
-			selectors.forEach((selector) => {
-				resolvedNestedSelector(selector, ruleNode).forEach((resolvedSelector) => {
+			for (const selector of selectors) {
+				for (const resolvedSelector of resolvedNestedSelector(selector, ruleNode)) {
 					parseSelector(resolvedSelector, result, ruleNode, (container) =>
 						checkSelector(container, ruleNode),
 					);
-				});
-			});
+				}
+			}
 		});
 	};
-}
+};
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

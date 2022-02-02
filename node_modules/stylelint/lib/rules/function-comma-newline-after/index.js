@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 'use strict';
 
 const fixer = require('../functionCommaSpaceFix');
@@ -16,12 +14,17 @@ const messages = ruleMessages(ruleName, {
 	rejectedAfterMultiLine: () => 'Unexpected whitespace after "," in a multi-line function',
 });
 
-function rule(expectation, options, context) {
-	const checker = whitespaceChecker('newline', expectation, messages);
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/function-comma-newline-after',
+};
+
+/** @type {import('stylelint').Rule} */
+const rule = (primary, _secondaryOptions, context) => {
+	const checker = whitespaceChecker('newline', primary, messages);
 
 	return (root, result) => {
 		const validOptions = validateOptions(result, ruleName, {
-			actual: expectation,
+			actual: primary,
 			possible: ['always', 'always-multi-line', 'never-multi-line'],
 		});
 
@@ -35,21 +38,21 @@ function rule(expectation, options, context) {
 			locationChecker: checker.afterOneOnly,
 			checkedRuleName: ruleName,
 			fix: context.fix
-				? (div, index, nodes) => {
-						return fixer({
+				? (div, index, nodes) =>
+						fixer({
 							div,
 							index,
 							nodes,
-							expectation,
+							expectation: primary,
 							position: 'after',
-							symb: context.newline,
-						});
-				  }
+							symb: context.newline || '',
+						})
 				: null,
 		});
 	};
-}
+};
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

@@ -1,13 +1,11 @@
-// @ts-nocheck
-
 'use strict';
 
-const _ = require('lodash');
 const isStandardSyntaxRule = require('../../utils/isStandardSyntaxRule');
 const parseSelector = require('../../utils/parseSelector');
 const report = require('../../utils/report');
 const ruleMessages = require('../../utils/ruleMessages');
 const validateOptions = require('../../utils/validateOptions');
+const { isRegExp, isString } = require('../../utils/validateTypes');
 
 const ruleName = 'selector-id-pattern';
 
@@ -16,18 +14,24 @@ const messages = ruleMessages(ruleName, {
 		`Expected ID selector "#${selectorValue}" to match pattern "${pattern}"`,
 });
 
-function rule(pattern) {
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/selector-id-pattern',
+};
+
+/** @type {import('stylelint').Rule} */
+const rule = (primary) => {
 	return (root, result) => {
 		const validOptions = validateOptions(result, ruleName, {
-			actual: pattern,
-			possible: [_.isRegExp, _.isString],
+			actual: primary,
+			possible: [isRegExp, isString],
 		});
 
 		if (!validOptions) {
 			return;
 		}
 
-		const normalizedPattern = _.isString(pattern) ? new RegExp(pattern) : pattern;
+		/** @type {RegExp} */
+		const normalizedPattern = isString(primary) ? new RegExp(primary) : primary;
 
 		root.walkRules((ruleNode) => {
 			if (!isStandardSyntaxRule(ruleNode)) {
@@ -52,7 +56,7 @@ function rule(pattern) {
 					report({
 						result,
 						ruleName,
-						message: messages.expected(value, pattern),
+						message: messages.expected(value, primary),
 						node: ruleNode,
 						index: sourceIndex,
 					});
@@ -60,8 +64,9 @@ function rule(pattern) {
 			});
 		});
 	};
-}
+};
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

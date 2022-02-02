@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 'use strict';
 
 const blockString = require('../../utils/blockString');
@@ -21,12 +19,17 @@ const messages = ruleMessages(ruleName, {
 	rejectedAfterMultiLine: () => 'Unexpected whitespace after "}" of a multi-line block',
 });
 
-function rule(expectation) {
-	const checker = whitespaceChecker('space', expectation, messages);
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/block-closing-brace-space-after',
+};
+
+/** @type {import('stylelint').Rule} */
+const rule = (primary) => {
+	const checker = whitespaceChecker('space', primary, messages);
 
 	return function (root, result) {
 		const validOptions = validateOptions(result, ruleName, {
-			actual: expectation,
+			actual: primary,
 			possible: [
 				'always',
 				'never',
@@ -45,6 +48,9 @@ function rule(expectation) {
 		root.walkRules(check);
 		root.walkAtRules(check);
 
+		/**
+		 * @param {import('postcss').Rule | import('postcss').AtRule} statement
+		 */
 		function check(statement) {
 			const nextNode = statement.next();
 
@@ -81,8 +87,9 @@ function rule(expectation) {
 			});
 		}
 	};
-}
+};
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

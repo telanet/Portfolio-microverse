@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 'use strict';
 
 const valueParser = require('postcss-value-parser');
@@ -17,13 +15,18 @@ const messages = ruleMessages(ruleName, {
 	expected: (actual, expected) => `Expected "${actual}" to be "${expected}"`,
 });
 
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/color-hex-length',
+};
+
 const HEX = /^#[0-9A-Za-z]+/;
 const IGNORED_FUNCTIONS = new Set(['url']);
 
-function rule(expectation, _, context) {
+/** @type {import('stylelint').Rule} */
+const rule = (primary, _secondaryOptions, context) => {
 	return (root, result) => {
 		const validOptions = validateOptions(result, ruleName, {
-			actual: expectation,
+			actual: primary,
 			possible: ['short', 'long'],
 		});
 
@@ -42,15 +45,15 @@ function rule(expectation, _, context) {
 
 				if (!isHexColor(node)) return;
 
-				if (expectation === 'long' && hexValue.length !== 4 && hexValue.length !== 5) {
+				if (primary === 'long' && hexValue.length !== 4 && hexValue.length !== 5) {
 					return;
 				}
 
-				if (expectation === 'short' && (hexValue.length < 6 || !canShrink(hexValue))) {
+				if (primary === 'short' && (hexValue.length < 6 || !canShrink(hexValue))) {
 					return;
 				}
 
-				const variant = expectation === 'long' ? longer : shorter;
+				const variant = primary === 'long' ? longer : shorter;
 				const expectedHex = variant(hexValue);
 
 				if (context.fix) {
@@ -74,8 +77,11 @@ function rule(expectation, _, context) {
 			}
 		});
 	};
-}
+};
 
+/**
+ * @param {string} hex
+ */
 function canShrink(hex) {
 	hex = hex.toLowerCase();
 
@@ -87,6 +93,9 @@ function canShrink(hex) {
 	);
 }
 
+/**
+ * @param {string} hex
+ */
 function shorter(hex) {
 	let hexVariant = '#';
 
@@ -97,6 +106,9 @@ function shorter(hex) {
 	return hexVariant;
 }
 
+/**
+ * @param {string} hex
+ */
 function longer(hex) {
 	let hexVariant = '#';
 
@@ -107,14 +119,21 @@ function longer(hex) {
 	return hexVariant;
 }
 
+/**
+ * @param {import('postcss-value-parser').Node} node
+ */
 function isIgnoredFunction({ type, value }) {
 	return type === 'function' && IGNORED_FUNCTIONS.has(value.toLowerCase());
 }
 
+/**
+ * @param {import('postcss-value-parser').Node} node
+ */
 function isHexColor({ type, value }) {
 	return type === 'word' && HEX.test(value);
 }
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

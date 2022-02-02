@@ -2,11 +2,11 @@
 
 'use strict';
 
-const _ = require('lodash');
 const atRuleParamIndex = require('../../utils/atRuleParamIndex');
 const declarationValueIndex = require('../../utils/declarationValueIndex');
 const getUnitFromValueNode = require('../../utils/getUnitFromValueNode');
-const isMap = require('../../utils/isMap');
+const isStandardSyntaxAtRule = require('../../utils/isStandardSyntaxAtRule');
+const isStandardSyntaxDeclaration = require('../../utils/isStandardSyntaxDeclaration');
 const keywordSets = require('../../reference/keywordSets');
 const mediaParser = require('postcss-media-query-parser').default;
 const optionsMatches = require('../../utils/optionsMatches');
@@ -15,6 +15,7 @@ const ruleMessages = require('../../utils/ruleMessages');
 const validateOptions = require('../../utils/validateOptions');
 const valueParser = require('postcss-value-parser');
 const vendor = require('../../utils/vendor');
+const { isRegExp, isString } = require('../../utils/validateTypes');
 
 const ruleName = 'unit-no-unknown';
 
@@ -22,9 +23,9 @@ const messages = ruleMessages(ruleName, {
 	rejected: (unit) => `Unexpected unknown unit "${unit}"`,
 });
 
-// The map property name (in map cleared from comments and spaces) always
-// has index that being divided by 4 gives remainder equals 0
-const mapPropertyNameIndexOffset = 4;
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/unit-no-unknown',
+};
 
 function rule(actual, options) {
 	return (root, result) => {
@@ -35,8 +36,8 @@ function rule(actual, options) {
 			{
 				actual: options,
 				possible: {
-					ignoreUnits: [_.isString, _.isRegExp],
-					ignoreFunctions: [_.isString, _.isRegExp],
+					ignoreUnits: [isString, isRegExp],
+					ignoreFunctions: [isString, isRegExp],
 				},
 				optional: true,
 			},
@@ -51,7 +52,6 @@ function rule(actual, options) {
 			// by postcss-value-parser
 			value = value.replace(/\*/g, ',');
 			const parsedValue = valueParser(value);
-			const ignoredMapProperties = [];
 
 			parsedValue.walk((valueNode) => {
 				// Ignore wrong units within `url` function
@@ -62,18 +62,6 @@ function rule(actual, options) {
 						optionsMatches(options, 'ignoreFunctions', valueNode.value))
 				) {
 					return false;
-				}
-
-				if (isMap(valueNode)) {
-					valueNode.nodes.forEach(({ sourceIndex }, index) => {
-						if (!(index % mapPropertyNameIndexOffset)) {
-							ignoredMapProperties.push(sourceIndex);
-						}
-					});
-				}
-
-				if (ignoredMapProperties.includes(valueNode.sourceIndex)) {
-					return;
 				}
 
 				const unit = getUnitFromValueNode(valueNode);
@@ -99,9 +87,11 @@ function rule(actual, options) {
 						let ignoreUnit = false;
 
 						mediaParser(node.params).walk((mediaNode, i, mediaNodes) => {
+							const lastMediaNode = mediaNodes[mediaNodes.length - 1];
+
 							if (
 								mediaNode.value.toLowerCase().includes('resolution') &&
-								_.last(mediaNodes).sourceIndex === valueNode.sourceIndex
+								lastMediaNode.sourceIndex === valueNode.sourceIndex
 							) {
 								ignoreUnit = true;
 
@@ -123,7 +113,8 @@ function rule(actual, options) {
 							const imageSet = parsedValue.nodes.find(
 								(n) => vendor.unprefixed(n.value) === 'image-set',
 							);
-							const imageSetValueLastIndex = _.last(imageSet.nodes).sourceIndex;
+							const imageSetLastNode = imageSet.nodes[imageSet.nodes.length - 1];
+							const imageSetValueLastIndex = imageSetLastNode.sourceIndex;
 
 							if (imageSetValueLastIndex >= valueNode.sourceIndex) {
 								return;
@@ -142,17 +133,24 @@ function rule(actual, options) {
 			});
 		}
 
-		root.walkAtRules((atRule) => {
-			if (!/^media$/i.test(atRule.name) && !atRule.variable) {
+		root.walkAtRules(/^media$/i, (atRule) => {
+			if (!isStandardSyntaxAtRule(atRule)) {
 				return;
 			}
 
 			check(atRule, atRule.params, atRuleParamIndex);
 		});
-		root.walkDecls((decl) => check(decl, decl.value, declarationValueIndex));
+		root.walkDecls((decl) => {
+			if (!isStandardSyntaxDeclaration(decl)) {
+				return;
+			}
+
+			check(decl, decl.value, declarationValueIndex);
+		});
 	};
 }
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

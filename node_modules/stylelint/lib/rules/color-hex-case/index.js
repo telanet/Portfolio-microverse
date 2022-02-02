@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 'use strict';
 
 const valueParser = require('postcss-value-parser');
@@ -17,13 +15,18 @@ const messages = ruleMessages(ruleName, {
 	expected: (actual, expected) => `Expected "${actual}" to be "${expected}"`,
 });
 
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/color-hex-case',
+};
+
 const HEX = /^#[0-9A-Za-z]+/;
 const IGNORED_FUNCTIONS = new Set(['url']);
 
-function rule(expectation, options, context) {
+/** @type {import('stylelint').Rule} */
+const rule = (primary, _secondaryOptions, context) => {
 	return (root, result) => {
 		const validOptions = validateOptions(result, ruleName, {
-			actual: expectation,
+			actual: primary,
 			possible: ['lower', 'upper'],
 		});
 
@@ -42,7 +45,7 @@ function rule(expectation, options, context) {
 
 				if (!isHexColor(node)) return;
 
-				const expected = expectation === 'lower' ? value.toLowerCase() : value.toUpperCase();
+				const expected = primary === 'lower' ? value.toLowerCase() : value.toUpperCase();
 
 				if (value === expected) return;
 
@@ -67,16 +70,23 @@ function rule(expectation, options, context) {
 			}
 		});
 	};
-}
+};
 
+/**
+ * @param {import('postcss-value-parser').Node} node
+ */
 function isIgnoredFunction({ type, value }) {
 	return type === 'function' && IGNORED_FUNCTIONS.has(value.toLowerCase());
 }
 
+/**
+ * @param {import('postcss-value-parser').Node} node
+ */
 function isHexColor({ type, value }) {
 	return type === 'word' && HEX.test(value);
 }
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

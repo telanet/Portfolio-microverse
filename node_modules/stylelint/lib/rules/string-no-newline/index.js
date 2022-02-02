@@ -12,11 +12,15 @@ const validateOptions = require('../../utils/validateOptions');
 const valueParser = require('postcss-value-parser');
 
 const ruleName = 'string-no-newline';
-const reNewLine = /(\r?\n)/;
+const reNewLine = /\r?\n/;
 
 const messages = ruleMessages(ruleName, {
 	rejected: 'Unexpected newline in string',
 });
+
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/string-no-newline',
+};
 
 function rule(actual) {
 	return (root, result) => {
@@ -52,7 +56,9 @@ function rule(actual) {
 
 			parseSelector(ruleNode.selector, result, ruleNode, (selectorTree) => {
 				selectorTree.walkAttributes((attributeNode) => {
-					if (!reNewLine.test(attributeNode.value)) {
+					const match = reNewLine.exec(attributeNode.value);
+
+					if (!match) {
 						return;
 					}
 
@@ -62,11 +68,12 @@ function rule(actual) {
 						// length of our operator , ie '='
 						attributeNode.operator,
 						// length of the contents before newline
-						RegExp.leftContext,
+						match.input.slice(0, match.index),
 					].reduce(
 						(index, str) => index + str.length,
 						// index of the start of our attribute node in our source
-						attributeNode.sourceIndex,
+						// plus 1 for the opening quotation mark
+						attributeNode.sourceIndex + 1,
 					);
 
 					report({
@@ -87,7 +94,13 @@ function rule(actual) {
 			}
 
 			valueParser(value).walk((valueNode) => {
-				if (valueNode.type !== 'string' || !reNewLine.test(valueNode.value)) {
+				if (valueNode.type !== 'string') {
+					return;
+				}
+
+				const match = reNewLine.exec(valueNode.value);
+
+				if (!match) {
 					return;
 				}
 
@@ -95,7 +108,7 @@ function rule(actual) {
 					// length of the quote
 					valueNode.quote,
 					// length of the contents before newline
-					RegExp.leftContext,
+					match.input.slice(0, match.index),
 				].reduce((index, str) => index + str.length, valueNode.sourceIndex);
 
 				report({
@@ -112,4 +125,5 @@ function rule(actual) {
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

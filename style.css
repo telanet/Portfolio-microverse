@@ -92,71 +92,65 @@ h2.section-title {
 }
 
 /* navbar styling */
-nav{
+nav {
   position: fixed;
   width: 100%;
   padding: 20px 0;
   z-index: 998;
   transition: all 0.3s ease;
   font-family: 'Ubuntu', sans-serif;
-  background-color: #3E3C3C;
+  background-color: #3e3c3c;
 }
-nav.sticky{
-  background: #3E3C3C;
+
+nav.sticky {
+  background: #3e3c3c;
   padding: 13px 0;
 }
-nav .navbar{
+
+nav .navbar {
   width: 90%;
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin: auto;
 }
-nav .navbar .logo a{
+
+nav .navbar .logo a {
   font-weight: 500;
   font-size: 35px;
   color: #fff;
   text-decoration: none;
 }
-nav.sticky .navbar .logo a{
+
+nav.sticky .navbar .logo a {
   color: #fff;
 }
-nav .navbar .menu{
+
+nav .navbar .menu {
   display: flex;
   position: relative;
 }
-nav .navbar .menu li{
+
+nav .navbar .menu li {
   list-style: none;
   margin: 0 8px;
 }
-.navbar .menu a{
+
+.navbar .menu a {
   font-size: 18px;
   font-weight: 500;
   color: #fff;
   padding: 6px 0;
   transition: all 0.4s ease;
 }
-.navbar .menu a:hover{
+
+.navbar .menu a:hover {
   color: #fff;
-}
-nav.sticky .menu a{
-  color: #FFF;
-}
-nav.sticky .menu a:hover{
-  color: #fff;
-}
-.navbar .media-icons a{
-  color: #fff;
-  font-size: 18px;
-  margin: 0 6px;
-}
-nav.sticky .media-icons a{
-  color: #FFF;
 }
 
 /* Side Navigation Menu Button CSS */
 nav .menu-btn,
-.navbar .menu .cancel-btn{
+.navbar .menu .cancel-btn {
   position: absolute;
   color: #fff;
   right: 30px;
@@ -166,16 +160,18 @@ nav .menu-btn,
   transition: all 0.3s ease;
   display: none;
 }
-nav .menu-btn{
-  color: #fff;
-}
-nav.sticky .menu-btn{
-  color: #FFF;
-}
-.navbar .menu .menu-btn{
+
+nav .menu-btn {
   color: #fff;
 }
 
+nav.sticky .menu-btn {
+  color: #fff;
+}
+
+.navbar .menu .menu-btn {
+  color: #fff;
+}
 
 .section-subtitle {
   font-family: 'Roboto', sans-serif;
@@ -224,6 +220,7 @@ nav.sticky .menu-btn{
   border: 1px solid #f4f1f0;
   color: #5b5957;
 }
+
 .page-section {
   padding: 100px 24px;
   display: flex;
@@ -542,15 +539,17 @@ footer .bottom-navigator {
     grid-template-rows: repeat(3, 1fr);
   }
 }
+
 @media (max-width: 750px) {
-  nav .navbar{
+  nav .navbar {
     width: 90%;
   }
-  nav .navbar .menu{
+
+  nav .navbar .menu {
     position: fixed;
     left: -100%;
     top: 0;
-    background: #3C3A39;
+    background: #3c3a39;
     height: 100%;
     width: 100%;
     padding-top: 60px;
@@ -558,34 +557,42 @@ footer .bottom-navigator {
     align-items: center;
     transition: all 0.5s ease;
   }
+
   nav .navbar .menu li {
     border-bottom: 1px solid #fff;
     padding: 10px;
     font-size: 14px;
   }
+
   nav .navbar .menu ul li:last-child {
     border-bottom: 0;
   }
-  .navbar.active .menu{
+
+  .navbar.active .menu {
     left: 0;
   }
-  nav .navbar .menu a{
+
+  nav .navbar .menu a {
     font-size: 23px;
     display: block;
     color: #fff;
     margin: 10px 0;
   }
-  nav.sticky .menu a:hover{
+
+  nav.sticky .menu a:hover {
     color: #fff;
   }
-  nav .navbar .media-icons{
+
+  nav .navbar .media-icons {
     display: none;
   }
+
   nav .menu-btn,
-  .navbar .menu .cancel-btn{
+  .navbar .menu .cancel-btn {
     display: block;
   }
 }
+
 @media screen and (min-width: 992px) {
   h1.section-title {
     font-size: 72px;
@@ -601,6 +608,7 @@ footer .bottom-navigator {
     font-size: 20px;
     line-height: 32px;
   }
+
   .page-section {
     padding: 100px 100px;
   }

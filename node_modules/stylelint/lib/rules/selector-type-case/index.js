@@ -2,7 +2,6 @@
 
 'use strict';
 
-const _ = require('lodash');
 const isKeyframeSelector = require('../../utils/isKeyframeSelector');
 const isStandardSyntaxRule = require('../../utils/isStandardSyntaxRule');
 const isStandardSyntaxTypeSelector = require('../../utils/isStandardSyntaxTypeSelector');
@@ -11,12 +10,18 @@ const parseSelector = require('../../utils/parseSelector');
 const report = require('../../utils/report');
 const ruleMessages = require('../../utils/ruleMessages');
 const validateOptions = require('../../utils/validateOptions');
+const { isString } = require('../../utils/validateTypes');
+const keywordSets = require('../../reference/keywordSets');
 
 const ruleName = 'selector-type-case';
 
 const messages = ruleMessages(ruleName, {
 	expected: (actual, expected) => `Expected "${actual}" to be "${expected}"`,
 });
+
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/selector-type-case',
+};
 
 function rule(expectation, options, context) {
 	return (root, result) => {
@@ -30,7 +35,7 @@ function rule(expectation, options, context) {
 			{
 				actual: options,
 				possible: {
-					ignoreTypes: [_.isString],
+					ignoreTypes: [isString],
 				},
 				optional: true,
 			},
@@ -41,7 +46,7 @@ function rule(expectation, options, context) {
 		}
 
 		root.walkRules((ruleNode) => {
-			let hasComments = _.get(ruleNode, 'raws.selector.raw');
+			let hasComments = ruleNode.raws.selector && ruleNode.raws.selector.raw;
 			const selector = hasComments ? hasComments : ruleNode.selector;
 			const selectors = ruleNode.selectors;
 
@@ -56,6 +61,10 @@ function rule(expectation, options, context) {
 			parseSelector(selector, result, ruleNode, (selectorAST) => {
 				selectorAST.walkTags((tag) => {
 					if (!isStandardSyntaxTypeSelector(tag)) {
+						return;
+					}
+
+					if (keywordSets.validMixedCaseSvgElements.has(tag.value)) {
 						return;
 					}
 
@@ -78,7 +87,7 @@ function rule(expectation, options, context) {
 								hasComments.slice(0, sourceIndex) +
 								expectedValue +
 								hasComments.slice(sourceIndex + value.length);
-							_.set(ruleNode, 'raws.selector.raw', hasComments);
+							ruleNode.raws.selector.raw = hasComments;
 						} else {
 							ruleNode.selector =
 								ruleNode.selector.slice(0, sourceIndex) +
@@ -104,4 +113,5 @@ function rule(expectation, options, context) {
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

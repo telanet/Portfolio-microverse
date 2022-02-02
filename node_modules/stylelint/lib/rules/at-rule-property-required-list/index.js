@@ -1,12 +1,10 @@
-// @ts-nocheck
-
 'use strict';
 
-const _ = require('lodash');
 const isStandardSyntaxAtRule = require('../../utils/isStandardSyntaxAtRule');
 const report = require('../../utils/report');
 const ruleMessages = require('../../utils/ruleMessages');
 const validateOptions = require('../../utils/validateOptions');
+const { isPlainObject } = require('is-plain-object');
 
 const ruleName = 'at-rule-property-required-list';
 
@@ -14,16 +12,24 @@ const messages = ruleMessages(ruleName, {
 	expected: (property, atRule) => `Expected property "${property}" for at-rule "${atRule}"`,
 });
 
-function rule(list) {
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/at-rule-property-required-list',
+};
+
+/** @type {import('stylelint').Rule} */
+const rule = (primary) => {
 	return (root, result) => {
 		const validOptions = validateOptions(result, ruleName, {
-			actual: list,
-			possible: [_.isObject],
+			actual: primary,
+			possible: [isPlainObject],
 		});
 
 		if (!validOptions) {
 			return;
 		}
+
+		/** @type {Record<string, string[]>} */
+		const list = primary;
 
 		root.walkAtRules((atRule) => {
 			if (!isStandardSyntaxAtRule(atRule)) {
@@ -37,29 +43,30 @@ function rule(list) {
 				return;
 			}
 
-			list[atRuleName].forEach((property) => {
+			for (const property of list[atRuleName]) {
 				const propertyName = property.toLowerCase();
 
 				const hasProperty = nodes.find(
-					({ type, prop }) => type === 'decl' && prop.toLowerCase() === propertyName,
+					(node) => node.type === 'decl' && node.prop.toLowerCase() === propertyName,
 				);
 
 				if (hasProperty) {
-					return;
+					continue;
 				}
 
-				return report({
+				report({
 					message: messages.expected(propertyName, atRuleName),
 					node: atRule,
 					result,
 					ruleName,
 				});
-			});
+				continue;
+			}
 		});
 	};
-}
+};
 
 rule.ruleName = ruleName;
 rule.messages = messages;
-
+rule.meta = meta;
 module.exports = rule;

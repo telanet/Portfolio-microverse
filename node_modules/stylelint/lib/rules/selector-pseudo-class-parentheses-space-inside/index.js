@@ -17,6 +17,10 @@ const messages = ruleMessages(ruleName, {
 	rejectedClosing: 'Unexpected whitespace before ")"',
 });
 
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/selector-pseudo-class-parentheses-space-inside',
+};
+
 function rule(expectation, options, context) {
 	return (root, result) => {
 		const validOptions = validateOptions(result, ruleName, {
@@ -45,7 +49,7 @@ function rule(expectation, options, context) {
 						return;
 					}
 
-					const paramString = pseudoNode.map(String).join(',');
+					const paramString = pseudoNode.map((node) => String(node)).join(',');
 					const nextCharIsSpace = paramString.startsWith(' ');
 					const openIndex =
 						pseudoNode.sourceIndex + stringifyProperty(pseudoNode, 'value').length + 1;
@@ -138,4 +142,5 @@ function stringifyProperty(node, propName) {
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

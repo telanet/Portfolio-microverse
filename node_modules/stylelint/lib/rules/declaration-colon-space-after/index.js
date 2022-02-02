@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 'use strict';
 
 const declarationColonSpaceChecker = require('../declarationColonSpaceChecker');
@@ -16,12 +14,17 @@ const messages = ruleMessages(ruleName, {
 	expectedAfterSingleLine: () => 'Expected single space after ":" with a single-line declaration',
 });
 
-function rule(expectation, options, context) {
-	const checker = whitespaceChecker('space', expectation, messages);
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/declaration-colon-space-after',
+};
+
+/** @type {import('stylelint').Rule} */
+const rule = (primary, _secondaryOptions, context) => {
+	const checker = whitespaceChecker('space', primary, messages);
 
 	return (root, result) => {
 		const validOptions = validateOptions(result, ruleName, {
-			actual: expectation,
+			actual: primary,
 			possible: ['always', 'never', 'always-single-line'],
 		});
 
@@ -39,25 +42,30 @@ function rule(expectation, options, context) {
 						const colonIndex = index - declarationValueIndex(decl);
 						const between = decl.raws.between;
 
-						if (expectation.startsWith('always')) {
+						if (between == null) throw new Error('`between` must be present');
+
+						if (primary.startsWith('always')) {
 							decl.raws.between =
 								between.slice(0, colonIndex) + between.slice(colonIndex).replace(/^:\s*/, ': ');
 
 							return true;
 						}
 
-						if (expectation === 'never') {
+						if (primary === 'never') {
 							decl.raws.between =
 								between.slice(0, colonIndex) + between.slice(colonIndex).replace(/^:\s*/, ':');
 
 							return true;
 						}
+
+						return false;
 				  }
 				: null,
 		});
 	};
-}
+};
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

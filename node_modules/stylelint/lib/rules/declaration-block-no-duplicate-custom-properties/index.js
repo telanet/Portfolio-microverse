@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 'use strict';
 
 const eachDeclarationBlock = require('../../utils/eachDeclarationBlock');
@@ -15,9 +13,14 @@ const messages = ruleMessages(ruleName, {
 	rejected: (property) => `Unexpected duplicate "${property}"`,
 });
 
-function rule(on) {
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/declaration-block-no-duplicate-custom-properties',
+};
+
+/** @type {import('stylelint').Rule} */
+const rule = (primary) => {
 	return (root, result) => {
-		const validOptions = validateOptions(result, ruleName, { actual: on });
+		const validOptions = validateOptions(result, ruleName, { actual: primary });
 
 		if (!validOptions) {
 			return;
@@ -54,8 +57,9 @@ function rule(on) {
 			});
 		});
 	};
-}
+};
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

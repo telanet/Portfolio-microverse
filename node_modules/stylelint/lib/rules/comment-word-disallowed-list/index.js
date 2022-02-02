@@ -1,13 +1,11 @@
-// @ts-nocheck
-
 'use strict';
 
-const _ = require('lodash');
 const containsString = require('../../utils/containsString');
 const matchesStringOrRegExp = require('../../utils/matchesStringOrRegExp');
 const report = require('../../utils/report');
 const ruleMessages = require('../../utils/ruleMessages');
 const validateOptions = require('../../utils/validateOptions');
+const { isRegExp, isString } = require('../../utils/validateTypes');
 
 const ruleName = 'comment-word-disallowed-list';
 
@@ -15,11 +13,16 @@ const messages = ruleMessages(ruleName, {
 	rejected: (pattern) => `Unexpected word matching pattern "${pattern}"`,
 });
 
-function rule(list) {
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/comment-word-disallowed-list',
+};
+
+/** @type {import('stylelint').Rule} */
+const rule = (primary) => {
 	return (root, result) => {
 		const validOptions = validateOptions(result, ruleName, {
-			actual: list,
-			possible: [_.isString, _.isRegExp],
+			actual: primary,
+			possible: [isString, isRegExp],
 		});
 
 		if (!validOptions) {
@@ -36,7 +39,7 @@ function rule(list) {
 				return;
 			}
 
-			const matchesWord = matchesStringOrRegExp(text, list) || containsString(text, list);
+			const matchesWord = matchesStringOrRegExp(text, primary) || containsString(text, primary);
 
 			if (!matchesWord) {
 				return;
@@ -50,10 +53,11 @@ function rule(list) {
 			});
 		});
 	};
-}
+};
 
 rule.primaryOptionArray = true;
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

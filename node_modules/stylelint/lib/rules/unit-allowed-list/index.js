@@ -2,7 +2,6 @@
 
 'use strict';
 
-const _ = require('lodash');
 const atRuleParamIndex = require('../../utils/atRuleParamIndex');
 const declarationValueIndex = require('../../utils/declarationValueIndex');
 const getUnitFromValueNode = require('../../utils/getUnitFromValueNode');
@@ -12,6 +11,7 @@ const ruleMessages = require('../../utils/ruleMessages');
 const validateObjectWithArrayProps = require('../../utils/validateObjectWithArrayProps');
 const validateOptions = require('../../utils/validateOptions');
 const valueParser = require('postcss-value-parser');
+const { isRegExp, isString } = require('../../utils/validateTypes');
 
 const ruleName = 'unit-allowed-list';
 
@@ -19,8 +19,12 @@ const messages = ruleMessages(ruleName, {
 	rejected: (unit) => `Unexpected unit "${unit}"`,
 });
 
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/unit-allowed-list',
+};
+
 function rule(listInput, options) {
-	const list = [].concat(listInput);
+	const list = [listInput].flat();
 
 	return (root, result) => {
 		const validOptions = validateOptions(
@@ -28,13 +32,14 @@ function rule(listInput, options) {
 			ruleName,
 			{
 				actual: list,
-				possible: [_.isString],
+				possible: [isString],
 			},
 			{
 				optional: true,
 				actual: options,
 				possible: {
-					ignoreProperties: validateObjectWithArrayProps([_.isString, _.isRegExp]),
+					ignoreFunctions: [isString, isRegExp],
+					ignoreProperties: validateObjectWithArrayProps([isString, isRegExp]),
 				},
 			},
 		);
@@ -48,9 +53,17 @@ function rule(listInput, options) {
 			// by postcss-value-parser
 			value = value.replace(/\*/g, ',');
 			valueParser(value).walk((valueNode) => {
-				// Ignore wrong units within `url` function
-				if (valueNode.type === 'function' && valueNode.value.toLowerCase() === 'url') {
-					return false;
+				if (valueNode.type === 'function') {
+					const valueLowerCase = valueNode.value.toLowerCase();
+
+					// Ignore wrong units within `url` function
+					if (valueLowerCase === 'url') {
+						return false;
+					}
+
+					if (optionsMatches(options, 'ignoreFunctions', valueLowerCase)) {
+						return false;
+					}
 				}
 
 				const unit = getUnitFromValueNode(valueNode);
@@ -82,4 +95,5 @@ rule.primaryOptionArray = true;
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

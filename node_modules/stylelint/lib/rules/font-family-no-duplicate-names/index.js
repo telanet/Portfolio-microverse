@@ -1,8 +1,5 @@
-// @ts-nocheck
-
 'use strict';
 
-const _ = require('lodash');
 const declarationValueIndex = require('../../utils/declarationValueIndex');
 const findFontFamily = require('../../utils/findFontFamily');
 const keywordSets = require('../../reference/keywordSets');
@@ -10,6 +7,7 @@ const optionsMatches = require('../../utils/optionsMatches');
 const report = require('../../utils/report');
 const ruleMessages = require('../../utils/ruleMessages');
 const validateOptions = require('../../utils/validateOptions');
+const { isRegExp, isString } = require('../../utils/validateTypes');
 
 const ruleName = 'font-family-no-duplicate-names';
 
@@ -17,19 +15,27 @@ const messages = ruleMessages(ruleName, {
 	rejected: (name) => `Unexpected duplicate name ${name}`,
 });
 
-const isFamilyNameKeyword = (node) =>
-	!node.quote && keywordSets.fontFamilyKeywords.has(node.value.toLowerCase());
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/font-family-no-duplicate-names',
+};
 
-function rule(actual, options) {
+/**
+ * @param {import('postcss-value-parser').Node} node
+ */
+const isFamilyNameKeyword = (node) =>
+	!('quote' in node) && keywordSets.fontFamilyKeywords.has(node.value.toLowerCase());
+
+/** @type {import('stylelint').Rule} */
+const rule = (primary, secondaryOptions) => {
 	return (root, result) => {
 		const validOptions = validateOptions(
 			result,
 			ruleName,
-			{ actual },
+			{ actual: primary },
 			{
-				actual: options,
+				actual: secondaryOptions,
 				possible: {
-					ignoreFontFamilyNames: [_.isString, _.isRegExp],
+					ignoreFontFamilyNames: [isString, isRegExp],
 				},
 				optional: true,
 			},
@@ -49,11 +55,11 @@ function rule(actual, options) {
 				return;
 			}
 
-			fontFamilies.forEach((fontFamilyNode) => {
+			for (const fontFamilyNode of fontFamilies) {
 				const family = fontFamilyNode.value.trim();
 
-				if (optionsMatches(options, 'ignoreFontFamilyNames', fontFamilyNode.value.trim())) {
-					return;
+				if (optionsMatches(secondaryOptions, 'ignoreFontFamilyNames', family)) {
+					continue;
 				}
 
 				if (isFamilyNameKeyword(fontFamilyNode)) {
@@ -64,12 +70,12 @@ function rule(actual, options) {
 							decl,
 						);
 
-						return;
+						continue;
 					}
 
 					keywords.add(family);
 
-					return;
+					continue;
 				}
 
 				if (familyNames.has(family)) {
@@ -79,13 +85,18 @@ function rule(actual, options) {
 						decl,
 					);
 
-					return;
+					continue;
 				}
 
 				familyNames.add(family);
-			});
+			}
 		});
 
+		/**
+		 * @param {string} message
+		 * @param {number} index
+		 * @param {import('postcss').Declaration} decl
+		 */
 		function complain(message, index, decl) {
 			report({
 				result,
@@ -96,8 +107,9 @@ function rule(actual, options) {
 			});
 		}
 	};
-}
+};
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

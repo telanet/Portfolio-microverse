@@ -2,7 +2,6 @@
 
 'use strict';
 
-const _ = require('lodash');
 const atRuleParamIndex = require('../../utils/atRuleParamIndex');
 const declarationValueIndex = require('../../utils/declarationValueIndex');
 const isStandardSyntaxRule = require('../../utils/isStandardSyntaxRule');
@@ -11,12 +10,17 @@ const report = require('../../utils/report');
 const ruleMessages = require('../../utils/ruleMessages');
 const validateOptions = require('../../utils/validateOptions');
 const valueParser = require('postcss-value-parser');
+const { isBoolean } = require('../../utils/validateTypes');
 
 const ruleName = 'string-quotes';
 
 const messages = ruleMessages(ruleName, {
 	expected: (q) => `Expected ${q} quotes`,
 });
+
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/string-quotes',
+};
 
 const singleQuote = `'`;
 const doubleQuote = `"`;
@@ -36,7 +40,7 @@ function rule(expectation, secondary, context) {
 			{
 				actual: secondary,
 				possible: {
-					avoidEscape: _.isBoolean,
+					avoidEscape: isBoolean,
 				},
 				optional: true,
 			},
@@ -46,7 +50,8 @@ function rule(expectation, secondary, context) {
 			return;
 		}
 
-		const avoidEscape = _.get(secondary, 'avoidEscape', true);
+		const avoidEscape =
+			secondary && secondary.avoidEscape !== undefined ? secondary.avoidEscape : true;
 
 		root.walk((node) => {
 			switch (node.type) {
@@ -81,28 +86,26 @@ function rule(expectation, secondary, context) {
 						return;
 					}
 
-					if (attributeNode.quoteMark === correctQuote) {
-						if (avoidEscape) {
-							const needsCorrectEscape = attributeNode.value.includes(correctQuote);
-							const needsOtherEscape = attributeNode.value.includes(erroneousQuote);
+					if (attributeNode.quoteMark === correctQuote && avoidEscape) {
+						const needsCorrectEscape = attributeNode.value.includes(correctQuote);
+						const needsOtherEscape = attributeNode.value.includes(erroneousQuote);
 
-							if (needsOtherEscape) {
-								return;
-							}
+						if (needsOtherEscape) {
+							return;
+						}
 
-							if (needsCorrectEscape) {
-								if (context.fix) {
-									selectorFixed = true;
-									attributeNode.quoteMark = erroneousQuote;
-								} else {
-									report({
-										message: messages.expected(expectation === 'single' ? 'double' : expectation),
-										node: ruleNode,
-										index: attributeNode.sourceIndex + attributeNode.offsetOf('value'),
-										result,
-										ruleName,
-									});
-								}
+						if (needsCorrectEscape) {
+							if (context.fix) {
+								selectorFixed = true;
+								attributeNode.quoteMark = erroneousQuote;
+							} else {
+								report({
+									message: messages.expected(expectation === 'single' ? 'double' : expectation),
+									node: ruleNode,
+									index: attributeNode.sourceIndex + attributeNode.offsetOf('value'),
+									result,
+									ruleName,
+								});
 							}
 						}
 					}
@@ -154,9 +157,9 @@ function rule(expectation, secondary, context) {
 				}
 			});
 
-			fixPositions.forEach((fixIndex) => {
+			for (const fixIndex of fixPositions) {
 				ruleNode.selector = replaceQuote(ruleNode.selector, fixIndex, correctQuote);
-			});
+			}
 		}
 
 		function checkDeclOrAtRule(node, value, getIndex) {
@@ -201,13 +204,13 @@ function rule(expectation, secondary, context) {
 				}
 			});
 
-			fixPositions.forEach((fixIndex) => {
+			for (const fixIndex of fixPositions) {
 				if (node.type === 'atrule') {
 					node.params = replaceQuote(node.params, fixIndex, correctQuote);
 				} else {
 					node.value = replaceQuote(node.value, fixIndex, correctQuote);
 				}
-			});
+			}
 		}
 	};
 }
@@ -218,4 +221,5 @@ function replaceQuote(string, index, replace) {
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;

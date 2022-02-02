@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 'use strict';
 
 const isAutoprefixable = require('../../utils/isAutoprefixable');
@@ -13,9 +11,14 @@ const messages = ruleMessages(ruleName, {
 	rejected: 'Unexpected vendor-prefix',
 });
 
-function rule(actual, options, context) {
+const meta = {
+	url: 'https://stylelint.io/user-guide/rules/list/media-feature-name-no-vendor-prefix',
+};
+
+/** @type {import('stylelint').Rule} */
+const rule = (primary, _secondaryOptions, context) => {
 	return (root, result) => {
-		const validOptions = validateOptions(result, ruleName, { actual });
+		const validOptions = validateOptions(result, ruleName, { actual: primary });
 
 		if (!validOptions) {
 			return;
@@ -40,7 +43,7 @@ function rule(actual, options, context) {
 				return;
 			}
 
-			matches.forEach((match) => {
+			for (const match of matches) {
 				report({
 					message: messages.rejected,
 					node: atRule,
@@ -48,11 +51,12 @@ function rule(actual, options, context) {
 					result,
 					ruleName,
 				});
-			});
+			}
 		});
 	};
-}
+};
 
 rule.ruleName = ruleName;
 rule.messages = messages;
+rule.meta = meta;
 module.exports = rule;
