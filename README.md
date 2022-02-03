@@ -1,27 +1,20 @@
+![](https://img.shields.io/badge/Microverse-blueviolet)
+
 # Project Name
 
--Portfolio: application Deploy to Github pages
+-Website design and animations
 
 ![screenshot](./app_screenshot.png)
 
-# Getting Started
--To get a local copy up and running follow these simple example steps.
-
-## Setup
--To setup the webpage in your local up in the repo page: click on code (dropdown list) > Download as ZIP
-
-# Deployment
--To run the project open folder (after extraction) then run index.html
+Additional description and animations done using javascript.
 
 ## Built With
 
 - HTML
 - CSS
+- Javascript
 
-# Live Demo
-
-- https://telanet.github.io/Portfolio/
-
+## To get a local copy up and running follow these simple example steps.
 
 ### Prerequisites
 -Git
@@ -30,10 +23,17 @@
 
 ## Authors
 
-👤 **Author1**
+👤 **Bernard**
 
-- GitHub: [@telanet](https://github.com/telanet)
-- Twitter: [@Ben54647605](https://twitter.com/Ben54647605)
+- GitHub: [@githubhandle](https://github.com/telanet)
+- Twitter: [@twitterhandle](https://twitter.com/Ben54647605)
+
+👤 **Linda K.**
+
+- GitHub: [Visit my github](https://github.com/keza681)
+- Twitter: [Visit my twitter](https://twitter.com/LKeza19)
+- LinkedIn: [Linkedin Profile](https://www.linkedin.com/in/linda-keza-a10150218/)
+
 
 ## 🤝 Contributing
 
@@ -43,7 +43,7 @@ Feel free to check the [issues page](../../issues/).
 
 ## Show your support
 
-Give a ⭐️ if you like this project!
+Give a ⭐ if you like this project!
 
 ## Acknowledgments
 
