@@ -16,7 +16,7 @@ cancelBtn.onclick = function () {
 };
 
 const navLinks = document.querySelectorAll('.menu li a');
-for (let i = 0; i < navLinks.length; i++) {
+for (let i = 0; i < navLinks.length; i += 1) {
   navLinks[i].addEventListener('click', () => {
     navBar.classList.remove('active');
     menuBtn.style.opacity = '1';
