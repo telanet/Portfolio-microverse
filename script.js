@@ -1,7 +1,10 @@
+/* eslint-disable func-names */
+/* eslint-disable linebreak-style */
 const body = document.querySelector('body');
 const navBar = document.querySelector('.navbar');
 const menuBtn = document.querySelector('.menu-btn');
 const cancelBtn = document.querySelector('.cancel-btn');
+
 menuBtn.onclick = function () {
   navBar.classList.add('active');
   menuBtn.style.opacity = '0';
