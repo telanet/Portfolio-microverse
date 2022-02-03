@@ -26,3 +26,5 @@ for (let i = 0; i < navLinks.length; i += 1) {
     menuBtn.style.pointerEvents = 'auto';
   });
 }
+
+const error = document.getElementById('error');
