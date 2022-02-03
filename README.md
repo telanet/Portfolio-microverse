@@ -1,39 +1,55 @@
-# Portfolio - Popup menu in mobile
+![](https://img.shields.io/badge/Microverse-blueviolet)
 
-  **This portfolio I built it using HTML, Css, and JavaScript**
+# Project Name
 
-  **Previous project changes:**
-  1. Build Mobile Version First.
-  2. Build Desktop Version.
-  3. Add Accessibility to site.
-  4. Add Mobile popup menu
+-Website design and animations
 
-  **New Changes:**
-  1. Add Mobile popup Menu using JavaScript.
+![screenshot](./app_screenshot.png)
 
-
-# Site Live Demo
-  [Live Demo Link](https://telanet.github.io/Portfolio-popup-menu/)
-
-
-# Site Screenshots Mockup
-
-  ![screenshot](./images/mobile-popup.png) 
-  
+Additional description and animations done using javascript.
 
 ## Built With
 
-- HTML.
-- CSS.
-- JavaScript.
-- Linters.
+- HTML
+- CSS
+- Javascript
 
+## To get a local copy up and running follow these simple example steps.
+
+### Prerequisites
+-Git
+-VS Code
+-Linters
 
 ## Authors
 
-👤 **Benard Ngetich**
-👤 **Linda**
+👤 **Bernard**
+
+- GitHub: [@githubhandle](https://github.com/telanet)
+- Twitter: [@twitterhandle](https://twitter.com/Ben54647605)
+
+👤 **Linda K.**
+
+- GitHub: [Visit my github](https://github.com/keza681)
+- Twitter: [Visit my twitter](https://twitter.com/LKeza19)
+- LinkedIn: [Linkedin Profile](https://www.linkedin.com/in/linda-keza-a10150218/)
 
 
-- GitHub: [@telanet](https://github.com/telanet)
-- Twitter: [@Ben54647605](https://twitter.com/Ben54647605)
+## 🤝 Contributing
+
+This project welcomes contributions.
+
+Feel free to check the [issues page](../../issues/).
+
+## Show your support
+
+Give a ⭐ if you like this project!
+
+## Acknowledgments
+
+- Hat tip to anyone whose code was used
+- Inspiration
+- etc
+
+## 📝 License
+MIT
