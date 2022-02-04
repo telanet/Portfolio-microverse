@@ -150,7 +150,7 @@ nav .navbar .menu li {
 nav .menu-btn,
 .navbar .menu .cancel-btn {
   position: absolute;
-  color: #67798E;
+  color: #67798e;
   right: 30px;
   top: 20px;
   font-size: 18px;
@@ -549,7 +549,7 @@ footer .bottom-navigator {
   }
 
   nav .navbar .menu li {
-    border-bottom: 1px solid #6F6C6B;
+    border-bottom: 1px solid #6f6c6b;
     padding: 10px;
     font-size: 14px;
   }
@@ -564,7 +564,7 @@ footer .bottom-navigator {
     font-weight: bold;
     font-size: 32px;
     display: block;
-    color: #FFF5E1;
+    color: #fff5e1;
     margin: 10px;
   }
 
