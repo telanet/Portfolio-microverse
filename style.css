@@ -585,6 +585,8 @@ footer .bottom-navigator {
     color: red;
     display: flex;
     font-family: 'Roboto', sans-serif;
+    padding-bottom: 10px;
+    margin-top: -20px;
   }
 }
 
@@ -751,6 +753,8 @@ footer .bottom-navigator {
     color: red;
     display: flex;
     font-family: 'Roboto', sans-serif;
+    padding-bottom: 10px;
+    margin-top: -20px;
   }
 
   .bottom-navigator .h-rule {
