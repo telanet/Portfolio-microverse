@@ -1,7 +1,10 @@
+/* eslint-disable func-names */
+/* eslint-disable linebreak-style */
 const body = document.querySelector('body');
 const navBar = document.querySelector('.navbar');
 const menuBtn = document.querySelector('.menu-btn');
 const cancelBtn = document.querySelector('.cancel-btn');
+
 menuBtn.onclick = function () {
   navBar.classList.add('active');
   menuBtn.style.opacity = '0';
@@ -15,9 +18,8 @@ cancelBtn.onclick = function () {
   body.style.overflow = 'auto';
 };
 
-// Side Navigation Bar Close While We Click On Navigation Links
 const navLinks = document.querySelectorAll('.menu li a');
-for (let i = 0; i < navLinks.length;) {
+for (let i = 0; i < navLinks.length; i += 1) {
   navLinks[i].addEventListener('click', () => {
     navBar.classList.remove('active');
     menuBtn.style.opacity = '1';
