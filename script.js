@@ -1,3 +1,4 @@
+// eslint-disable-next-line linebreak-style
 /* eslint-disable func-names */
 /* eslint-disable linebreak-style */
 const body = document.querySelector('body');
