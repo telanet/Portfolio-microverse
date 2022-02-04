@@ -1,20 +1,15 @@
-![](https://img.shields.io/badge/Microverse-blueviolet)
+![](http://127.0.0.1:5500/index.html)
 
 # Project Name
+ 
+ save the form data in the local storage
 
--Website design and animations
-
-![screenshot](./app_screenshot.png)
-
-Additional description and animations done using javascript.
 
 ## Built With
 
 - HTML
 - CSS
 - Javascript
-
-## To get a local copy up and running follow these simple example steps.
 
 ### Prerequisites
 -Git
@@ -49,7 +44,6 @@ Give a ⭐ if you like this project!
 
 - Hat tip to anyone whose code was used
 - Inspiration
-- etc
 
 ## 📝 License
 MIT

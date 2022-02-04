@@ -22,7 +22,6 @@ form.addEventListener('submit', (submitForm) => {
   }
 });
 
-
 const contactForm = document.querySelector('form');
 
 let localSt = {
