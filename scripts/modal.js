@@ -108,11 +108,10 @@ function modalpopup() {
   popUp.innerHTML = showing;
   body.appendChild(popUp);
 
-  document.addEventListener('click', (click) => {
-    if (click.target.id === 'closeModal') {
-      popUp.style.display = 'none';
-    }
-  });
+  document.querySelector('closeModal');
+  closeModal.onclick = function () {
+    popUp.style.display = 'none';
+  };
 }
 
 document.addEventListener('click', (click) => {
