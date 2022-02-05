@@ -108,7 +108,7 @@ function modalpopup() {
   popUp.innerHTML = showing;
   body.appendChild(popUp);
 
-  let closebtn = document.getElementById('closeModal');
+  const closebtn = document.getElementById('closeModal');
   closebtn.onclick = function () {
     popUp.style.display = 'none';
   };
