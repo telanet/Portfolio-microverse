@@ -2,7 +2,7 @@
 
 # Project Name
 
--Website design and animations
+-Local storage
 
 ![screenshot](./app_screenshot.png)
 
