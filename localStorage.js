@@ -1,10 +1,31 @@
-function saveInput() {
-  const name = document.getElementById('name').value;
-  const email = document.getElementById('email').value;
-  const message = document.getElementById('message').value;
+/* eslint-disable linebreak-style */
+const formStorage = document.querySelector('#contactform');
+const nameField = formStorage.elements.fullname;
+const emailField = formStorage.elements.email;
+const messageField = formStorage.elements.message;
 
-  localStorage.setItem('name', name);
-  localStorage.setItem('email', email);
-  localStorage.setItem('message', message);
+function dataStorage() {
+  const userData = {
+    fullname: nameField.value,
+    emailAddress: emailField.value,
+    message: messageField.value,
+  };
+  localStorage.setItem('formData', JSON.stringify(userData));
 }
-saveInput();
+
+function inputValues() {
+  const formData = JSON.parse(localStorage.getItem('formData'));
+  if (formData !== null) {
+    nameField.value = formData.fullname;
+    emailField.value = formData.emailAddress;
+    messageField.value = formData.message;
+  }
+}
+
+window.addEventListener('load', inputValues);
+
+for (let n = 0; n < formStorage.length; n += 1) {
+  formStorage[n].addEventListener('change', () => {
+    dataStorage();
+  });
+}
