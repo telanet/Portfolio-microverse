@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 const body = document.querySelector('body');
 const featuredbtn = document.getElementById('multipost');
 
