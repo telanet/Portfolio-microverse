@@ -17,11 +17,11 @@ body {
 }
 
 h1 {
-  font-family: 'Crete Round', serif;
+  font-family: "Crete Round", serif;
 }
 
 p {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 
 /* actual page styling */
@@ -32,7 +32,7 @@ p {
 }
 
 .myWorks {
-  margin: 0 24px 104px 24px;
+  margin: 0 24px 104px;
   padding-top: 120px;
   height: 83px;
   width: 327px;
@@ -77,7 +77,7 @@ p {
 }
 
 .projectHeader h3 {
-  font-family: 'Crete Round', serif;
+  font-family: "Crete Round", serif;
   font-style: normal;
   font-weight: 400;
   font-size: 32px;
@@ -86,7 +86,7 @@ p {
 }
 
 .postInformation .postTitle h3 {
-  font-family: 'Crete Round', serif;
+  font-family: "Crete Round", serif;
   font-weight: 400;
   font-size: 32px;
   font-style: normal;
@@ -95,7 +95,7 @@ p {
 }
 
 .post-info-body p {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   width: 327px;
   height: 147px;
   font-style: normal;
@@ -114,7 +114,7 @@ p {
 
 .post-info-body ul li {
   color: #091e42;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-style: normal;
   font-weight: 500;
   font-size: 15px;
@@ -189,7 +189,7 @@ p {
   background: #ff6b00;
   align-items: center;
   padding: 12px;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: 17px;
@@ -216,7 +216,7 @@ p {
 }
 
 .post-info-body .button:disabled {
-  background: rgba(255, 255, 255, 0.24);
+  background: rgb(255 255 255 / 24%);
   color: #000;
 }
 
@@ -230,7 +230,7 @@ p {
 
 .project {
   margin: 0 24px 36px 12px;
-  background: linear-gradient(180.45deg, rgba(50, 50, 38, 0) 0.65%, rgba(38, 38, 38, 0.9) 75.94%), url(../images/projectbg.png);
+  background: linear-gradient(180.45deg, rgb(50 50 38 / 0%) 0.65%, rgb(38 38 38 / 90%) 75.94%), url(../images/projectbg.png);
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -240,7 +240,7 @@ p {
 }
 
 .projectHeader {
-  padding: 84px 16px 12px 16px;
+  padding: 84px 16px 12px;
   width: 295px;
   height: 81px;
 }
@@ -248,11 +248,11 @@ p {
 .projectBody {
   width: 295px;
   height: 87px;
-  margin: 80px 16px 12px 16px;
+  margin: 80px 16px 12px;
 }
 
 .projectBody p {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-style: normal;
   font-weight: 400;
   font-size: 16px;
@@ -270,7 +270,7 @@ p {
 .projectBody ul li {
   list-style: none;
   color: #fff;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-style: normal;
   font-weight: 500;
   font-size: 15px;
@@ -282,7 +282,7 @@ p {
 .projectHTML {
   width: 56px;
   height: 40px;
-  background: rgba(255, 255, 255, 0.24);
+  background: rgb(255 255 255 / 24%);
   margin-right: 12px;
 }
 
@@ -296,7 +296,7 @@ p {
 .projectBootstrap {
   width: 95px;
   height: 40px;
-  background: rgba(255, 255, 255, 0.24);
+  background: rgb(255 255 255 / 24%);
   margin-left: -24px;
   margin-right: 12px;
 }
@@ -311,7 +311,7 @@ p {
 .projectRuby {
   width: 61px;
   height: 40px;
-  background: rgba(255, 255, 255, 0.24);
+  background: rgb(255 255 255 / 24%);
   margin-right: 12px;
   margin-left: -10px;
 }
@@ -337,7 +337,7 @@ p {
   height: 48px;
   padding: 12px;
   background: #ff6b00;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: 17px;
@@ -365,7 +365,7 @@ button:active {
 }
 
 button:disabled {
-  background: rgba(255, 255, 255, 0.24);
+  background: rgb(255 255 255 / 24%);
   color: #000;
 }
 
@@ -373,14 +373,14 @@ button:disabled {
 @media screen and (min-width: 992px) {
   .multipost {
     width: 100%;
-    margin: 5px 118px 0 118px;
+    margin: 5px 118px 0;
     position: relative;
   }
 
   .myWorks h2 {
     float: left;
     margin: 0 24px 114px 35.5px;
-    font-family: 'Crete Round', serif;
+    font-family: "Crete Round", serif;
     font-style: normal;
     font-weight: 400;
     font-size: 40px;
@@ -411,7 +411,7 @@ button:disabled {
   .postTitle h3 {
     width: 448px;
     height: 48px;
-    font-family: 'Crete Round', serif;
+    font-family: "Crete Round", serif;
     font-style: normal;
     font-weight: 400;
     font-size: 40px;
@@ -423,7 +423,7 @@ button:disabled {
     width: 448px;
     height: 140px;
     margin: 23px 0;
-    font-family: 'Inter', sans-serif;
+    font-family: "Inter", sans-serif;
     font-style: normal;
     font-weight: normal;
     font-size: 20px;
@@ -432,13 +432,13 @@ button:disabled {
   }
 
   .post-info-body ul {
-    margin: 0 0 24px 0;
+    margin: 0 0 24px;
   }
 
   /* Individual projects section */
 
   .projects {
-    margin: 5px 118px 0 118px;
+    margin: 5px 118px 0;
     position: relative;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -472,20 +472,20 @@ button:disabled {
   .projectHeader h3 {
     width: 337px;
     height: 81px;
-    font-family: 'Crete Round', serif;
+    font-family: "Crete Round", serif;
     font-style: normal;
     font-weight: normal;
     font-size: 32px;
     line-height: 44px;
-    margin: 85px auto 24px auto;
+    margin: 85px auto 24px;
   }
 
   .projectBody p {
     position: relative;
-    margin: 180px auto 24px auto;
+    margin: 180px auto 24px;
     width: 337px;
     height: 72px;
-    font-family: 'Inter', sans-serif;
+    font-family: "Inter", sans-serif;
     font-style: normal;
     font-weight: 400;
     font-size: 17px;

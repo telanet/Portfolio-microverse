@@ -41,7 +41,7 @@ a {
 }
 
 .topnavBar {
-  margin: 0 20px 0 20px;
+  margin: 0 20px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -177,7 +177,7 @@ ul li {
 }
 
 .authorheader {
-  margin: 0 24px 12px 24px;
+  margin: 0 24px 12px;
   padding-top: 120px;
   position: relative;
 }
@@ -202,7 +202,7 @@ ul li {
 }
 
 .authoroccupation {
-  margin: 0 24px 12px 24px;
+  margin: 0 24px 12px;
   height: 27px;
   width: 327px;
   left: 24px;
@@ -212,7 +212,7 @@ ul li {
 .authorexplanation {
   width: 327px;
   height: 124px;
-  margin: 0 24px 12px 24px;
+  margin: 0 24px 12px;
 }
 
 .authorexplanation p {
@@ -228,7 +228,7 @@ ul li {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  padding: 0 24px 75px 24px;
+  padding: 0 24px 75px;
   height: 75px;
 }
 
