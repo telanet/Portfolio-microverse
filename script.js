@@ -1,5 +1,3 @@
-/* eslint-disable func-names */
-/* eslint-disable linebreak-style */
 const body = document.querySelector('body');
 const navBar = document.querySelector('.navbar');
 const menuBtn = document.querySelector('.menu-btn');

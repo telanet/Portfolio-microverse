@@ -580,6 +580,14 @@ footer .bottom-navigator {
   .navbar .menu .cancel-btn {
     display: block;
   }
+
+  #error {
+    color: red;
+    display: flex;
+    font-family: 'Roboto', sans-serif;
+    padding-bottom: 10px;
+    margin-top: -20px;
+  }
 }
 
 @media screen and (min-width: 992px) {
@@ -739,6 +747,14 @@ footer .bottom-navigator {
 
   .contact-form .form-widgets > * {
     justify-content: flex-start;
+  }
+
+  #error {
+    color: red;
+    display: flex;
+    font-family: 'Roboto', sans-serif;
+    padding-bottom: 10px;
+    margin-top: -20px;
   }
 
   .bottom-navigator .h-rule {
