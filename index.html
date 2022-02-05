@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script
       async
       src="https://www.googletagmanager.com/gtag/js?id=G-NY8Z23WW1D"
     ></script>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <link
     href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap"
@@ -202,17 +202,17 @@
       </section>
     <section class="page-section contact-section">
         <section class="contact-form" id="contact-section">
-            <form action="https://formspree.io/f/mrgjeazo" class="contact-form" id="form" method="post">
+            <form action="https://formspree.io/f/mrgjeazo" class="contact-form" id="contactform" method="post">
               <div class="description-text">
                 <h2>I'm always interested in hearing about new projects, so if you'd like to chat please get in touch.</h2>
               </div> 
               <ul class="form-widgets ul-list vertical-list">
-                <li><input type="text" name="full-name" maxlength="30" placeholder="Full name" required></li>
-                <li><input class="form-input" type="email" name="email" placeholder="Email address" id="email"></li>
-                <li class="validate">
-                <small id="error"></small></li>
-              <li><textarea name="message" maxlength="500" placeholder="Enter text here" required></textarea></li>   
-                <li class="submit-btn"><button type="submit" name="sumbit-button" class="enable-button submit-btn" >Get in touch</button></li>
+
+                <li><input type="text" name="fullname" maxlength="30" placeholder="Full name" id="FullName" required></li>
+                <li><input type="email" name="email" placeholder="Email address" id="email" required></li>
+                <li><textarea name="message" maxlength="500" placeholder="Enter text here" id="message" required></textarea></li>
+                <li><button type="submit" name="sumbit-button" class="enable-button submit-button" onclick="saveInput()">Get in touch</button></li>
+
               </ul>
             </form>
           </section> 
@@ -232,13 +232,15 @@
     </section>
     <hr class="h-rule">
     </footer>
-     
-    </main>
-    
-    <hr class="hr" />
+   
+</main>
+ <hr class="hr" />
 
     <script src="scripts/modal.js"></script>
     <script src="scripts/scripts.js"></script>
     <script src="scripts/validator.js"></script>
-  </body>
+    <script src="script.js"></script>
+    <script src="localStorage.js"></script>
+
+</body>
 </html>
